@@ -1,10 +1,12 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
+import AuthField from '@/features/auth/form/AuthField';
+import AuthSubmitButton from '@/features/auth/form/AuthSubmitButton';
+import AuthLayout from '@/features/auth/layout/AuthLayout';
+import AuthShell from '@/features/auth/layout/AuthShell';
+import AuthFooterLink from '@/features/auth/ui/AuthFooterLink';
+import GoogleButton from '@/features/auth/ui/GoogleButton';
+import AuthDivider from '@/features/auth/ui/AuthDivider';
+import { appName } from '@/constants/app';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -22,79 +24,74 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <AuthShell
+            title="Masuk"
+            heading={`Masuk ke ${appName}`}
+            description="Masuk ke akun Pendampingku untuk melanjutkan pencatatan dan monitoring"
+            status={status}
+        >
+            <GoogleButton
+                label="Masuk dengan Google"
+                onClick={() => {
+                    // oauth login with Google
+                }}
+                className="mt-6"
+            />
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+            <AuthDivider label="or Login with Email" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+            <form onSubmit={submit} className="space-y-4">
+                <AuthField
+                    id="email"
+                    type="email"
+                    label="Email"
+                    value={data.email}
+                    autoComplete="username"
+                    placeholder="Masukkan email Anda"
+                    onChange={(e) => setData('email', e.target.value)}
+                    error={errors.email}
+                    required
+                />
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                <AuthField
+                    id="password"
+                    type="password"
+                    label="Kata Sandi"
+                    value={data.password}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    onChange={(e) => setData('password', e.target.value)}
+                    error={errors.password}
+                    isPassword
+                    required
+                />
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
+                <div className="flex items-center justify-end pt-1">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="text-sm font-medium text-blue-normal hover:underline focus:outline-none"
                         >
-                            Forgot your password?
+                            Lupa kata sandi?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
                 </div>
+
+                <AuthSubmitButton
+                    processing={processing}
+                    loadingText="Memproses..."
+                >
+                    Masuk
+                </AuthSubmitButton>
             </form>
-        </GuestLayout>
+
+            <AuthFooterLink
+                question="Tidak Punya Akun?"
+                href={route('register')}
+                label="Daftar di Sini"
+            />
+        </AuthShell>
     );
 }
+
+Login.layout = (page) => <AuthLayout>{page}</AuthLayout>;

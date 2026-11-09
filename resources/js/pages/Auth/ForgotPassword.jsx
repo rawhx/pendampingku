@@ -1,8 +1,9 @@
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
+import AuthField from '@/features/auth/form/AuthField';
+import AuthSubmitButton from '@/features/auth/form/AuthSubmitButton';
+import AuthLayout from '@/features/auth/layout/AuthLayout';
+import AuthShell from '@/features/auth/layout/AuthShell';
+import AuthFooterLink from '@/features/auth/ui/AuthFooterLink';
+import { useForm } from '@inertiajs/react';
 
 export default function ForgotPassword({ status }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -16,40 +17,41 @@ export default function ForgotPassword({ status }) {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Forgot Password" />
-
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email
-                address and we will email you a password reset link that will
-                allow you to choose a new one.
-            </div>
-
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
-
-            <form onSubmit={submit}>
-                <TextInput
+        <AuthShell
+            title="Lupa Kata Sandi"
+            heading="Lupa Kata Sandi?"
+            description="Masukkan email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi"
+            status={status}
+        >
+            <form onSubmit={submit} className="mt-6 space-y-4">
+                <AuthField
                     id="email"
                     type="email"
-                    name="email"
+                    label="Email"
                     value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
+                    autoComplete="username"
+                    placeholder="Masukkan email Anda"
                     onChange={(e) => setData('email', e.target.value)}
+                    error={errors.email}
+                    isFocused
+                    required
                 />
 
-                <InputError message={errors.email} className="mt-2" />
-
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Email Password Reset Link
-                    </PrimaryButton>
-                </div>
+                <AuthSubmitButton
+                    processing={processing}
+                    loadingText="Mengirim..."
+                >
+                    Kirim Tautan Reset
+                </AuthSubmitButton>
             </form>
-        </GuestLayout>
+
+            <AuthFooterLink
+                question="Ingat kata sandi Anda?"
+                href={route('login')}
+                label="Masuk di Sini"
+            />
+        </AuthShell>
     );
 }
+
+ForgotPassword.layout = (page) => <AuthLayout>{page}</AuthLayout>;
