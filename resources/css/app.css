@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@theme {
+  /* blue */
+  --color-blue-light: #E6F2FE;
+  --color-blue-light-hover: #D9ECFD;
+  --color-blue-light-active: #C0E0FC;
+  --color-blue-normal: #0081F2;
+  --color-blue-normal-hover: #0074DA;
+  --color-blue-normal-active: #0067C2;
+  --color-blue-dark: #0061B6;
+  --color-blue-dark-hover: #004D91;
+  --color-blue-dark-active: #003A6D;
+  --color-blue-darker: #002D55;
+
+  /* yellow */
+  --color-yellow-light: #FFFEEC;
+  --color-yellow-light-hover: #FFFEE2;
+  --color-yellow-light-active: #FFFDC3;
+  --color-yellow-normal: #FFF83F;
+  --color-yellow-normal-hover: #E6DF39;
+  --color-yellow-normal-active: #CCC632;
+  --color-yellow-dark: #BFBA2F;
+  --color-yellow-dark-hover: #999526;
+  --color-yellow-dark-active: #73701C;
+  --color-yellow-darker: #595716;
+
+  /* orange */
+  --color-orange-normal: #FFA600;
+
+  /* green */
+  --color-green-light: #EBF9EE;
+  --color-green-light-hover: #E1F7E6;
+  --color-green-light-active: #C0EECC;
+  --color-green-normal: #34C759;
+  --color-green-normal-hover: #2FB350;
+  --color-green-normal-active: #2A9F47;
+  --color-green-dark: #279543;
+  --color-green-dark-hover: #1F7735;
+  --color-green-dark-active: #175A28;
+  --color-green-darker: #12461F;
+
+  /* red */
+  --color-red-light: #FFEBEC;
+  --color-red-light-hover: #FFE1E2;
+  --color-red-light-active: #FFC3C5;
+  --color-red-normal: #FF383C;
+  --color-red-normal-hover: #E63236;
+  --color-red-normal-active: #CC2D30;
+  --color-red-dark: #BF2A2D;
+  --color-red-dark-hover: #992224;
+  --color-red-dark-active: #73191B;
+  --color-red-darker: #591415;
+
+  /* white */
+  --color-white-light: #FDFDFD;
+  --color-white-light-hover: #FAFAFA;
+  --color-white-light-active: #F7F7F7;
+  --color-white-normal: #E6E6E6;
+  --color-white-normal-hover: #CFCFCF;
+  --color-white-normal-active: #B8B8B8;
+  --color-white-dark: #ADADAD;
+  --color-white-dark-hover: #8A8A8A;
+  --color-white-dark-active: #676767;
+  --color-white-darker: #515151;
+
+  /* black */
+  --color-black-light: #EDEDED;
+  --color-black-light-hover: #E3E3E3;
+  --color-black-light-active: #C6C6C6;
+  --color-black-normal: #464646;
+  --color-black-normal-hover: #3F3F3F;
+  --color-black-normal-active: #383838;
+  --color-black-dark: #353535;
+  --color-black-dark-hover: #2A2A2A;
+  --color-black-dark-active: #1F1F1F;
+  --color-black-darker: #191919;
+  --color-black-muted: #737373;
+
+  /* font */
+  --font-sans: -apple-system, "SF Pro Display", "SF Pro Text", "Inter Variable",
+    "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Figma text style */
+  /* --font-weight-590: 590;
+  --text-body: 16px;
+  --text-body--line-height: 21px;
+  --tracking-body: -0.31px; */
+}
+
+@utility gradient-primary {
+  background: linear-gradient(180deg, #92CCFF 0%, #5DB3FF 4.81%, #0081F2 100%);
+}
+
+@utility btn-gradient-primary {
+  background: linear-gradient(180deg, #92CCFF 0%, #5DB3FF 4.81%, #0081F2 100%);
+}
+
+@utility btn-gradient-primary-hover {
+  background: linear-gradient(180deg, #68B2F3 0%, #4291D7 4.81%, #004D91 100%);
+}
+
+@utility btn-gradient-danger {
+  background: linear-gradient(180deg, #FFA6A7 0%, #FF777A 4.81%, #FF383C 100%);
+}
+
+@utility btn-gradient-danger-hover {
+  background: linear-gradient(180deg, #FF8F91 0%, #FF5C60 4.81%, #E63236 100%);
+}
+
+@utility btn-disabled {
+  background: #E9E9E9;
+  color: #8E8E93;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-black-normal);
+    font-size: 16px;
+    line-height: 21px;
+    letter-spacing: -0.31px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
