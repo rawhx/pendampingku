@@ -1,0 +1,18 @@
+[
+    {
+        "label": "Beranda",
+        "href": "#beranda"
+    },
+    {
+        "label": "Fitur Unggulan",
+        "href": "#fitur"
+    },
+    {
+        "label": "Alur Kerja",
+        "href": "#alur-kerja"
+    },
+    {
+        "label": "Testimoni",
+        "href": "#testimoni"
+    }
+]
