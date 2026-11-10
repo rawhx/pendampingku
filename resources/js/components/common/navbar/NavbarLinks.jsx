@@ -1,11 +1,14 @@
 import { Link } from '@inertiajs/react';
 import { scrollToSection } from './useActiveSection';
 
-/**
- * Daftar link navigasi.
- * variant: 'desktop' | 'mobile'
- * Item dengan `disabled: true` tampil redup dan tidak bisa diklik.
- */
+function hasRoute(name) {
+    try {
+        return typeof route === 'function' && route().has(name);
+    } catch {
+        return false;
+    }
+}
+
 export default function NavbarLinks({
     items,
     activeHash,
@@ -20,11 +23,15 @@ export default function NavbarLinks({
     return (
         <>
             {items.map((item, index) => {
+                const isUnavailable = Boolean(
+                    item.disabled ||
+                        (item.routeName && !hasRoute(item.routeName)),
+                );
                 const isRouteActive = Boolean(
                     item.routeName && activeRoute === item.routeName,
                 );
                 const isActive =
-                    !item.disabled &&
+                    !isUnavailable &&
                     (isRouteActive ||
                         (!activeRoute &&
                             (activeHash === item.href ||
@@ -38,7 +45,7 @@ export default function NavbarLinks({
                     ? 'text-white/70 hover:text-white'
                     : 'text-normal hover:text-blue-normal';
 
-                if (item.disabled) {
+                if (isUnavailable) {
                     return (
                         <span
                             key={index}
