@@ -18,6 +18,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('dashboard/Dashboard');
 })->name('dashboard');
 
+Route::get('/siswa-binaan', function () {
+    return Inertia::render('siswaBinaan/SiswaBinaanPage');
+})->name('siswa-binaan');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
