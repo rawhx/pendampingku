@@ -1,4 +1,4 @@
 [
     { "label": "Beranda", "routeName": "dashboard", "disabled": false },
-    { "label": "Siswa Binaan", "routeName": "siswa-binaan", "disabled": false }
+    { "label": "Siswa Binaan", "routeName": "siswa-binaan", "disabled": true }
 ]
