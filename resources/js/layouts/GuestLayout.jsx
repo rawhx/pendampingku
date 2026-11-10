@@ -1,18 +1,18 @@
-import ApplicationLogo from '@/components/ui/ApplicationLogo';
-import { Link } from '@inertiajs/react';
+import Navbar from '@/components/common/navbar/Navbar';
+import Footer from '@/components/common/Footer';
 
-export default function GuestLayout({ children }) {
+export default function GuestLayout({ children, canLogin, canRegister, isLanding = false, ...props }) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
-            </div>
-
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
-            </div>
+        <div className={`flex min-h-screen flex-col ${props.className || ''}`}>
+            <Navbar isLanding={isLanding} canLogin={canLogin} canRegister={canRegister} />
+            <main className={isLanding ? 'flex-grow' : 'flex-grow flex flex-col items-center sm:justify-center sm:pt-0'}>
+                {isLanding ? children : (
+                    <div className="w-full overflow-hidden px-6 py-4 sm:max-w-md sm:rounded-lg px-25">
+                        {children}
+                    </div>
+                )}
+            </main>
+            <Footer isLanding={isLanding} />
         </div>
     );
 }

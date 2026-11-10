@@ -1,10 +1,9 @@
-import landingNavigation from '@/data/navigation/landing-navigation.json';
-import appConfig from '@/Config/app';
+import landingNavigation from '@/data/navigation/landing.json';
+import { address, appName, email, phone } from '@/constants/app';
 
-const FOOTER_ANCHORS = ['#fitur', '#testimoni'];
+const FOOTER_ANCHORS = ['#beranda', '#fitur', '#alur-kerja', '#testimoni'];
 
 const navLinks = [
-    { label: 'Cari Guru Pendamping', href: '#' },
     ...landingNavigation.filter(({ href }) => FOOTER_ANCHORS.includes(href)),
 ];
 
@@ -41,7 +40,7 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                                 aria-hidden="true"
                                 className="mb-4 h-10 w-10 rounded-md bg-white"
                             />
-                            <span className="sr-only">{appConfig.name}</span>
+                            <span className="sr-only">{appName}</span>
                             <p className="max-w-md text-justify text-sm leading-relaxed text-white">
                                 Mendampingi tumbuh kembang dan pendidikan anak
                                 berkebutuhan khusus secara terpadu melalui
@@ -79,9 +78,7 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                                         <circle cx="12" cy="10" r="2.5" />
                                     </Icon>
                                     <address className="not-italic leading-relaxed">
-                                        Jl. Soekarno Hatta No. 124, Kel.
-                                        Jatimulyo, Kec. Lowokwaru, Kota Malang,
-                                        Jawa Timur 65141
+                                        {address}
                                     </address>
                                 </li>
                                 <li className="flex items-center gap-3">
@@ -89,10 +86,10 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
                                     </Icon>
                                     <a
-                                        href="tel:+6281234567890"
+                                        href={`tel:${phone.replace(/\D/g, '')}`}
                                         className="hover:underline"
                                     >
-                                        +62 812-3456-7890
+                                        {phone}
                                     </a>
                                 </li>
                                 <li className="flex items-center gap-3">
@@ -101,10 +98,10 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                                         <path d="M22 7l-10 6L2 7" />
                                     </Icon>
                                     <a
-                                        href="mailto:halo@pendampingku.id"
+                                        href={`mailto:${email}`}
                                         className="break-all hover:underline"
                                     >
-                                        halo@pendampingku.id
+                                        {email}
                                     </a>
                                 </li>
                             </ul>
@@ -113,7 +110,7 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
 
                     <div className="mt-10 border-t border-white/40 pt-6 text-center text-xs text-white sm:mt-12 sm:text-sm">
                         <p>
-                            {appConfig.name} - Solusi Terpercaya Pendampingan Anak
+                            {appName} - Solusi Terpercaya Pendampingan Anak
                             Inklusi &copy; {new Date().getFullYear()}
                         </p>
                     </div>
@@ -126,12 +123,12 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
         <footer className="bg-white shadow dark:bg-black-darker w-full">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
                 <span className="block text-sm text-black-muted sm:text-center dark:text-white">
-                    {appConfig.name} - Solusi Terpercaya Pendampingan Anak Inklusi © {new Date().getFullYear()}{' '}
+                    {appName} - Solusi Terpercaya Pendampingan Anak Inklusi © {new Date().getFullYear()}{' '}
                     <a
                         href="/"
                         className="hover:underline"
                     >
-                        WebDev™
+                        {appName}™
                     </a>
                     . All Rights Reserved.
                 </span>
