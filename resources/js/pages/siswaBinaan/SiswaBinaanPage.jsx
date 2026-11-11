@@ -47,7 +47,7 @@ export default function SiswaBinaanPage() {
                     <div className="absolute -right-[280px] top-[1040px] h-[335px] w-[335px] rounded-full bg-blue-normal/40 blur-[50px]" />
                 </div>
 
-                <div className="relative mx-auto w-full max-w-[1092px]">
+                <div className="relative mx-auto w-full max-w-7xl">
                     <StudentSummaryStats items={summaryStats} />
 
                     <section className="mt-8">
