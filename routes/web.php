@@ -22,6 +22,12 @@ Route::get('/siswa-binaan', function () {
     return Inertia::render('siswaBinaan/SiswaBinaanPage');
 })->name('siswa-binaan');
 
+Route::get('/siswa-binaan/{student}/catatan-harian', function (string $student) {
+    return Inertia::render('siswaBinaan/CatatanHarianPage', [
+        'studentId' => $student,
+    ]);
+})->name('siswa-binaan.catatan-harian');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

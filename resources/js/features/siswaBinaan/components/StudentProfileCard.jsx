@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import StudentIcon from './StudentIcon';
 
 const statusTone = { success: 'bg-green-normal text-white', warning: 'bg-orange-normal text-white' };
@@ -35,7 +36,7 @@ export default function StudentProfileCard({ student }) {
                 <StudentIcon name="star" className="h-5 w-5 shrink-0 text-blue-normal" /><p className="min-w-0 break-words">{student.insight}</p></div>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button type="button" className="h-11 rounded-full bg-blue-normal px-6 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[150px]">Lihat Profil</button>
-                <button type="button" className="h-11 rounded-full border border-blue-normal bg-white px-6 text-sm font-semibold text-blue-normal transition hover:bg-blue-light focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[120px]">Catat</button>
+                <Link href={route('siswa-binaan.catatan-harian', student.id)} className="flex h-11 items-center justify-center rounded-full border border-blue-normal bg-white px-6 text-sm font-semibold text-blue-normal transition hover:bg-blue-light focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[120px]">Catat</Link>
             </div>
         </div>
     </article>;
