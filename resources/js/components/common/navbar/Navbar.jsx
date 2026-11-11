@@ -28,7 +28,7 @@ export default function Navbar({ isLanding = false, isDashboard = false, canLogi
     })();
 
     return (
-            <nav className="fixed inset-x-0 top-4 z-50 mx-auto w-[calc(100%-2rem)] max-w-[1080px]">
+            <nav className="fixed inset-x-0 top-4 z-50 mx-auto max-w-7xl">
             <div className="rounded-[2rem] border border-white/20 bg-white/10 backdrop-blur-md shadow-lg shadow-black/5">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex min-w-0 h-16 items-center justify-between gap-3">
