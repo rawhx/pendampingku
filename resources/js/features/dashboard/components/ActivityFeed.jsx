@@ -1,7 +1,7 @@
 export default function ActivityFeed({ items }) {
     return (
-        <section className="flex min-w-0 flex-col gap-5 rounded-[32px] bg-white/40 px-5 py-8 shadow-[0_0_28px_rgba(0,129,242,0.08)] lg:min-h-[572px]">
-            <h2 className="text-2xl font-bold leading-tight text-blue-normal lg:text-[32px]">
+        <section className="flex min-w-0 flex-col gap-5 rounded-[32px] bg-white p-8 shadow-[0_0_28px_rgba(0,129,242,0.08)] lg:min-h-full">
+            <h2 className="text-2xl font-bold text-blue-normal lg:text-3xl">
                 Aktivitas Terkini
             </h2>
 
