@@ -15,7 +15,7 @@ export default function StatCard({ icon, label, value, detail }) {
             </div>
 
             <div className="flex flex-col items-center gap-2 text-center">
-                <p className="text-2xl font-semibold leading-tight lg:text-[32px]">
+                <p className="text-2xl font-semibold leading-tight lg:text-3xl">
                     {value}
                 </p>
                 <p className="text-xs leading-snug">{detail}</p>

@@ -12,7 +12,7 @@ export default function StudentCard({
     note,
 }) {
     return (
-        <article className="flex min-w-0 flex-col gap-5 rounded-3xl bg-white/50 p-3 py-5 shadow-[0_0_28px_rgba(0,129,242,0.08)]">
+        <article className="flex min-w-0 flex-col gap-5 rounded-3xl bg-white p-6 py-5 shadow-[0_0_28px_rgba(0,129,242,0.08)]">
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h3 className="break-words text-lg font-bold leading-tight text-blue-normal sm:text-xl">
@@ -23,7 +23,7 @@ export default function StudentCard({
                     </p>
                 </div>
 
-                <div className="flex flex-col items-start gap-2 text-xs text-black-normal sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex gap-2 text-xs text-black-normal flex-row items-center justify-between">
                     <span>Status Emosi &amp; Perilaku</span>
                     <span
                         className={`max-w-full rounded-full px-2.5 py-1 text-center text-[11px] font-semibold leading-tight ${
@@ -36,7 +36,7 @@ export default function StudentCard({
             </div>
 
             <div className="flex flex-col gap-3">
-                <div className="flex flex-col gap-5 rounded-3xl bg-white-light-active px-3 py-4 shadow-[0_0_2px_rgba(0,0,0,0.08)]">
+                <div className="flex flex-col gap-5 rounded-3xl bg-white-light-active px-7 py-5 shadow-[0_0_2px_rgba(0,0,0,0.08)]">
                     {metrics.map((metric) => (
                         <div
                             key={metric.label}
