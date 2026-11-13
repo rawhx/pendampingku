@@ -8,6 +8,7 @@ export default function useStudent(studentId) {
 
     useEffect(() => {
         let isCurrent = true;
+        setIsLoading(true);
 
         const loadStudent = async () => {
             try {
