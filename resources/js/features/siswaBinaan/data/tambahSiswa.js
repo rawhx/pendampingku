@@ -1,4 +1,7 @@
-export const classOptions = ['Kelas 1', 'Kelas 2A', 'Kelas 3B', 'Kelas 4C'];
+export const classOptions = Array.from(
+    { length: 12 },
+    (_, index) => `Kelas ${index + 1}`,
+);
 
 export const genderOptions = ['Perempuan', 'Laki-laki'];
 
