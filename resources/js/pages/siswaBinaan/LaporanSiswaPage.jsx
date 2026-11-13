@@ -2,11 +2,10 @@ import { icons } from '@/assets/icons/icons';
 import ObservationHistoryCard from '@/features/siswaBinaan/components/ObservationHistoryCard';
 import ReportProgressCard from '@/features/siswaBinaan/components/ReportProgressCard';
 import StudentRadarChart from '@/features/siswaBinaan/components/StudentRadarChart';
-import { getStudentReport } from '@/features/siswaBinaan/data/studentReport';
-import { students } from '@/features/siswaBinaan/data/students';
+import useStudent from '@/features/siswaBinaan/hooks/useStudent';
+import useStudentReport from '@/features/siswaBinaan/hooks/useStudentReport';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
 
 function SearchIcon() {
     return (
@@ -27,11 +26,32 @@ function EmptyState() {
 
 export default function LaporanSiswaPage() {
     const { studentId } = usePage().props;
-    const student = students.find((item) => item.id === studentId);
-    const [query, setQuery] = useState('');
-    const [sortOrder, setSortOrder] = useState('newest');
-    const [dateFilter, setDateFilter] = useState('');
-    const [visibleNotes, setVisibleNotes] = useState(3);
+    const { student, isLoading } = useStudent(studentId);
+    const {
+        notes,
+        metrics,
+        latestNote,
+        filteredNotes,
+        query,
+        sortOrder,
+        dateFilter,
+        visibleNotes,
+        updateQuery,
+        updateSortOrder,
+        updateDateFilter,
+        showMoreNotes,
+    } = useStudentReport(student);
+
+    if (isLoading) {
+        return (
+            <AuthenticatedLayout>
+                <Head title="Memuat Laporan" />
+                <div className="px-4 pb-20 pt-32 text-center text-sm text-black-muted">
+                    Memuat laporan siswa...
+                </div>
+            </AuthenticatedLayout>
+        );
+    }
 
     if (!student) {
         return (
@@ -46,35 +66,6 @@ export default function LaporanSiswaPage() {
             </AuthenticatedLayout>
         );
     }
-
-    const { notes, metrics } = getStudentReport(student);
-    const filteredNotes = useMemo(() => {
-        const filtered = notes.filter((note) => {
-            const matchesQuery = [
-                note.subject,
-                note.notes,
-                note.qualitative?.factual,
-                note.date,
-            ]
-                .filter(Boolean)
-                .join(' ')
-                .toLowerCase()
-                .includes(query.trim().toLowerCase());
-            const matchesDate = !dateFilter || note.date === dateFilter;
-
-            return matchesQuery && matchesDate;
-        });
-
-        return filtered.sort((first, second) => {
-            const firstDate = new Date(first.savedAt ?? first.date ?? 0);
-            const secondDate = new Date(second.savedAt ?? second.date ?? 0);
-
-            return sortOrder === 'newest'
-                ? secondDate - firstDate
-                : firstDate - secondDate;
-        });
-    }, [dateFilter, notes, query, sortOrder]);
-    const latestNote = notes[0];
 
     return (
         <AuthenticatedLayout>
@@ -153,10 +144,7 @@ export default function LaporanSiswaPage() {
                                 </span>
                                 <input
                                     value={query}
-                                    onChange={(event) => {
-                                        setQuery(event.target.value);
-                                        setVisibleNotes(3);
-                                    }}
+                                    onChange={(event) => updateQuery(event.target.value)}
                                     placeholder="Cari nama siswa, Kelas"
                                     className="h-12 w-full rounded-[28px] border-0 bg-white py-0 pl-12 pr-4 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none placeholder:text-[#D1D4D7] focus:ring-2 focus:ring-blue-normal/20"
                                 />
@@ -166,10 +154,7 @@ export default function LaporanSiswaPage() {
                                 <span className="sr-only">Urutkan catatan</span>
                                 <select
                                     value={sortOrder}
-                                    onChange={(event) => {
-                                        setSortOrder(event.target.value);
-                                        setVisibleNotes(3);
-                                    }}
+                                    onChange={(event) => updateSortOrder(event.target.value)}
                                     className="h-12 w-full appearance-none rounded-[28px] border-0 bg-white py-0 pl-4 pr-8 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none focus:ring-2 focus:ring-blue-normal/20 sm:w-fit sm:pl-5 sm:pr-10"
                                 >
                                     <option value="newest">Terbaru</option>
@@ -182,10 +167,7 @@ export default function LaporanSiswaPage() {
                                 <input
                                     type="date"
                                     value={dateFilter}
-                                    onChange={(event) => {
-                                        setDateFilter(event.target.value);
-                                        setVisibleNotes(3);
-                                    }}
+                                    onChange={(event) => updateDateFilter(event.target.value)}
                                     className="h-12 w-full rounded-[28px] border-0 bg-white px-3 py-0 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none focus:ring-2 focus:ring-blue-normal/20 sm:w-fit sm:px-5"
                                 />
                             </label>
@@ -196,7 +178,7 @@ export default function LaporanSiswaPage() {
                         </div>
 
                         {filteredNotes.length > visibleNotes && (
-                            <button type="button" onClick={() => setVisibleNotes((current) => current + 3)} className="mx-auto mt-5 flex h-11 items-center justify-center rounded-full bg-blue-normal px-7 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2">
+                            <button type="button" onClick={showMoreNotes} className="mx-auto mt-5 flex h-11 items-center justify-center rounded-full bg-blue-normal px-7 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2">
                                 Selengkapnya
                             </button>
                         )}

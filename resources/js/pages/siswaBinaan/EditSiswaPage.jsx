@@ -1,6 +1,6 @@
 import TambahSiswaForm from '@/features/siswaBinaan/components/TambahSiswaForm';
-import { initialTambahSiswaForm } from '@/features/siswaBinaan/data/tambahSiswa';
-import { students } from '@/features/siswaBinaan/data/students';
+import useStudent from '@/features/siswaBinaan/hooks/useStudent';
+import { toStudentFormValues } from '@/features/siswaBinaan/utils/studentMapper';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 
@@ -15,7 +15,18 @@ function BackIcon() {
 
 export default function EditSiswaPage() {
     const { studentId } = usePage().props;
-    const student = students.find((item) => item.id === studentId);
+    const { student, isLoading } = useStudent(studentId);
+
+    if (isLoading) {
+        return (
+            <AuthenticatedLayout>
+                <Head title="Memuat Siswa" />
+                <div className="px-4 pb-20 pt-32 text-center text-sm text-black-muted">
+                    Memuat data siswa...
+                </div>
+            </AuthenticatedLayout>
+        );
+    }
 
     if (!student) {
         return (
@@ -31,14 +42,7 @@ export default function EditSiswaPage() {
         );
     }
 
-    const initialValues = {
-        ...initialTambahSiswaForm,
-        nisn: student.nisn,
-        fullName: student.name,
-        className: student.className,
-        disabilityCondition: student.condition,
-        status: 'Aktif',
-    };
+    const initialValues = toStudentFormValues(student);
 
     return (
         <AuthenticatedLayout>
@@ -63,7 +67,7 @@ export default function EditSiswaPage() {
                         <p className="mt-2 text-sm text-black-muted">Perbarui informasi {student.name}.</p>
                     </div>
 
-                    <TambahSiswaForm initialValues={initialValues} />
+                    <TambahSiswaForm initialValues={initialValues} studentId={student.id} />
                 </div>
             </div>
         </AuthenticatedLayout>

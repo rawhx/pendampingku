@@ -1,51 +1,23 @@
 import StudentProfileCard from '@/features/siswaBinaan/components/StudentProfileCard';
 import StudentSummaryStats from '@/features/siswaBinaan/components/StudentSummaryStats';
 import StudentToolbar from '@/features/siswaBinaan/components/StudentToolbar';
-import { students, summaryStats } from '@/features/siswaBinaan/data/students';
+import useSessionNotification from '@/features/siswaBinaan/hooks/useSessionNotification';
+import useStudents from '@/features/siswaBinaan/hooks/useStudents';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useEffect, useMemo, useState } from 'react';
 
 export default function SiswaBinaanPage() {
-    const [query, setQuery] = useState('');
-    const [notification, setNotification] = useState(() => {
-        if (typeof window === 'undefined') return '';
-
-        return window.sessionStorage.getItem('pendampingku:catatan-success') ?? '';
-    });
-
-    useEffect(() => {
-        if (!notification) {
-            return undefined;
-        }
-
-        const timer = window.setTimeout(() => {
-            window.sessionStorage.removeItem('pendampingku:catatan-success');
-            setNotification('');
-        }, 5000);
-
-        return () => window.clearTimeout(timer);
-    }, [notification]);
-
-    const dismissNotification = () => {
-        window.sessionStorage.removeItem('pendampingku:catatan-success');
-        setNotification('');
-    };
-
-    const filteredStudents = useMemo(() => {
-        const normalizedQuery = query.trim().toLowerCase();
-
-        if (!normalizedQuery) {
-            return students;
-        }
-
-        return students.filter((student) =>
-            [student.name, student.nisn, student.className, student.condition]
-                .join(' ')
-                .toLowerCase()
-                .includes(normalizedQuery),
-        );
-    }, [query]);
+    const {
+        query,
+        setQuery,
+        filteredStudents,
+        summaryStats,
+        isLoading,
+        loadError,
+    } = useStudents();
+    const { notification, dismissNotification } = useSessionNotification(
+        'pendampingku:catatan-success',
+    );
 
     return (
         <AuthenticatedLayout>
@@ -88,7 +60,15 @@ export default function SiswaBinaanPage() {
                         />
 
                         <div className="mt-6 flex flex-col gap-5">
-                            {filteredStudents.length > 0 ? (
+                            {isLoading ? (
+                                <div className="rounded-3xl bg-white/70 px-6 py-16 text-center text-sm text-black-muted">
+                                    Memuat data siswa...
+                                </div>
+                            ) : loadError ? (
+                                <div className="rounded-3xl bg-white/70 px-6 py-16 text-center text-sm text-red-700">
+                                    {loadError}
+                                </div>
+                            ) : filteredStudents.length > 0 ? (
                                 filteredStudents.map((student) => (
                                     <StudentProfileCard
                                         key={student.id}

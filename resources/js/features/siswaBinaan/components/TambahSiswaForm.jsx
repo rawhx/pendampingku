@@ -8,8 +8,8 @@ import {
     getTodayInputValue,
     initialTambahSiswaForm,
     statusOptions,
-    validateTambahSiswa,
 } from '../data/tambahSiswa';
+import useStudentForm from '../hooks/useStudentForm';
 import FormControl, {
     fieldClass,
     readOnlyFieldClass,
@@ -17,29 +17,21 @@ import FormControl, {
 } from './FormControl';
 import FormSection from './FormSection';
 
-export default function TambahSiswaForm({ initialValues = initialTambahSiswaForm }) {
+export default function TambahSiswaForm({
+    initialValues = initialTambahSiswaForm,
+    studentId = null,
+}) {
     const [form, setForm] = useState(() => ({
         ...initialTambahSiswaForm,
         ...initialValues,
     }));
-    const [errors, setErrors] = useState({});
-    const [saved, setSaved] = useState(false);
+    const { errors, saved, isSaving, clearFieldError, submit } = useStudentForm(studentId);
 
     const age = useMemo(() => calculateAge(form.birthDate), [form.birthDate]);
 
     const updateField = (field, value) => {
         setForm((current) => ({ ...current, [field]: value }));
-
-        setErrors((current) => {
-            if (!current[field]) {
-                return current;
-            }
-
-            const next = { ...current };
-            delete next[field];
-
-            return next;
-        });
+        clearFieldError(field);
     };
 
     useEffect(() => {
@@ -54,29 +46,27 @@ export default function TambahSiswaForm({ initialValues = initialTambahSiswaForm
         return () => clearTimeout(timer);
     }, [saved]);
 
-    const submit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-
-        const nextErrors = validateTambahSiswa(form);
-
-        if (Object.keys(nextErrors).length > 0) {
-            setErrors(nextErrors);
-
-            return;
-        }
-
-        setErrors({});
-        setSaved(true);
+        submit(form);
     };
 
     return (
-        <form onSubmit={submit} noValidate className="flex flex-col gap-10">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10">
+            {errors.form && (
+                <div
+                    role="alert"
+                    className="rounded-2xl border border-red-300 bg-red-50 px-5 py-3 text-sm font-medium text-red-700"
+                >
+                    {errors.form}
+                </div>
+            )}
             {saved && (
                 <div
                     role="status"
                     className="rounded-2xl border border-green-normal/30 bg-green-light px-5 py-3 text-sm font-medium text-green-dark"
                 >
-                    Data siswa berhasil disimpan. Mengalihkan ke daftar
+                    Data siswa berhasil {studentId ? 'diperbarui' : 'disimpan'}. Mengalihkan ke daftar
                     siswa...
                 </div>
             )}
@@ -484,10 +474,14 @@ export default function TambahSiswaForm({ initialValues = initialTambahSiswaForm
 
             <button
                 type="submit"
-                disabled={saved}
+                disabled={saved || isSaving}
                 className="gradient-primary h-12 w-full rounded-[28px] text-base font-semibold text-white shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
             >
-                {saved ? 'Menyimpan...' : 'Simpan'}
+                {saved || isSaving
+                    ? 'Menyimpan...'
+                    : studentId
+                      ? 'Simpan Perubahan'
+                      : 'Simpan'}
             </button>
         </form>
     );

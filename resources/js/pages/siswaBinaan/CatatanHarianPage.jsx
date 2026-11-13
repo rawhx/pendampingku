@@ -11,18 +11,46 @@ import StrategySection from '@/features/catatanHarian/components/StrategySection
 import VisibilitySection from '@/features/catatanHarian/components/VisibilitySection';
 import { emotionOptions } from '@/features/catatanHarian/data/catatanHarian';
 import useCatatanHarianForm from '@/features/catatanHarian/hooks/useCatatanHarianForm';
-import { students } from '@/features/siswaBinaan/data/students';
+import useStudent from '@/features/siswaBinaan/hooks/useStudent';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function CatatanHarianPage() {
     const { studentId } = usePage().props;
-    const student = useMemo(
-        () => students.find((item) => item.id === studentId) ?? students[0],
-        [studentId],
+    const { student, isLoading } = useStudent(studentId);
+    const catatan = useCatatanHarianForm(
+        student ?? { id: studentId, name: 'Siswa', className: '' },
     );
-    const catatan = useCatatanHarianForm(student);
+
+    if (isLoading) {
+        return (
+            <AuthenticatedLayout>
+                <Head title="Memuat Siswa" />
+                <div className="px-4 pb-20 pt-32 text-center text-sm text-black-muted">
+                    Memuat data siswa...
+                </div>
+            </AuthenticatedLayout>
+        );
+    }
+
+    if (!student) {
+        return (
+            <AuthenticatedLayout>
+                <Head title="Siswa Tidak Ditemukan" />
+                <div className="px-4 pb-20 pt-32 text-center">
+                    <h1 className="text-2xl font-bold text-black-normal">
+                        Siswa tidak ditemukan
+                    </h1>
+                    <Link
+                        href={route('siswa-binaan')}
+                        className="mt-4 inline-flex text-sm font-semibold text-blue-normal hover:underline"
+                    >
+                        Kembali ke Siswa Binaan
+                    </Link>
+                </div>
+            </AuthenticatedLayout>
+        );
+    }
 
     return (
         <AuthenticatedLayout>
