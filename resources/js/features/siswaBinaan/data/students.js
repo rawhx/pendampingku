@@ -3,7 +3,6 @@ export const summaryStats = [
     { id: 'asd', icon: 'heart', value: '2', label: 'Spektrum ASD' },
     { id: 'adhd', icon: 'bolt', value: '1', label: 'ADHD Regulasi' },
     { id: 'speech', icon: 'speech', value: '1', label: 'Disleksia & Wicara' },
-    { id: 'iep', icon: 'check', value: '100%', label: 'IEP Terpantau' },
 ];
 
 export const students = [

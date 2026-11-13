@@ -1,21 +1,36 @@
 import { rubricCategories } from '@/features/catatanHarian/data/catatanHarian';
 
-function readSavedNote(studentId) {
+export function getStudentNotes(studentId) {
     if (typeof window === 'undefined') {
-        return null;
+        return [];
     }
 
     try {
         const saved = window.localStorage.getItem(`catatan-harian:${studentId}`);
+        const parsed = saved ? JSON.parse(saved) : null;
 
-        return saved ? JSON.parse(saved) : null;
+        if (!parsed) {
+            return [];
+        }
+
+        return Array.isArray(parsed) ? parsed : [parsed];
     } catch {
-        return null;
+        return [];
     }
 }
 
+export function saveStudentNote(studentId, note) {
+    const notes = getStudentNotes(studentId);
+
+    window.localStorage.setItem(
+        `catatan-harian:${studentId}`,
+        JSON.stringify([...notes, note]),
+    );
+}
+
 export function getStudentMetrics(student) {
-    const rubric = readSavedNote(student.id)?.rubric ?? {};
+    const notes = getStudentNotes(student.id);
+    const rubric = notes.at(-1)?.rubric ?? {};
 
     return rubricCategories.map((category) => {
         const answeredValues = category.items

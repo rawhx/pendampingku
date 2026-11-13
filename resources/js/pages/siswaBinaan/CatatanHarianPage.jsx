@@ -13,43 +13,10 @@ import {
     getAiRecommendation,
 } from '@/features/catatanHarian/data/catatanHarian';
 import { students } from '@/features/siswaBinaan/data/students';
+import { saveStudentNote } from '@/features/siswaBinaan/data/studentMetrics';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
-
-function loadForm(student) {
-    const initialForm = createInitialForm(student);
-
-    if (typeof window === 'undefined') {
-        return initialForm;
-    }
-
-    try {
-        const saved = JSON.parse(
-            window.localStorage.getItem(`catatan-harian:${student.id}`),
-        );
-
-        if (!saved) {
-            return initialForm;
-        }
-
-        return {
-            ...initialForm,
-            ...saved,
-            rubric: {
-                ...initialForm.rubric,
-                ...(saved.rubric ?? {}),
-            },
-            qualitative: {
-                ...initialForm.qualitative,
-                ...(saved.qualitative ?? {}),
-            },
-            files: initialForm.files,
-        };
-    } catch {
-        return initialForm;
-    }
-}
 
 export default function CatatanHarianPage() {
     const { studentId } = usePage().props;
@@ -58,7 +25,7 @@ export default function CatatanHarianPage() {
         [studentId],
     );
 
-    const [form, setForm] = useState(() => loadForm(student));
+    const [form, setForm] = useState(() => createInitialForm(student));
     const [errors, setErrors] = useState({});
     const [saved, setSaved] = useState(false);
     const [step, setStep] = useState(1);
@@ -189,10 +156,10 @@ export default function CatatanHarianPage() {
         const { files, ...persistedForm } = form;
 
         try {
-            window.localStorage.setItem(
-                `catatan-harian:${student.id}`,
-                JSON.stringify(persistedForm),
-            );
+            saveStudentNote(student.id, {
+                ...persistedForm,
+                savedAt: new Date().toISOString(),
+            });
         } catch {
             // Abaikan kegagalan penyimpanan lokal (mis. mode privat).
         }
@@ -206,7 +173,22 @@ export default function CatatanHarianPage() {
             <Head title="Catatan Harian" />
 
             <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 lg:px-0 lg:pb-20 lg:pt-36">
-                <h1 className="sr-only">Catatan Harian {student.name}</h1>
+                <Link
+                    href={route('siswa-binaan')}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-blue-normal transition hover:text-blue-normal-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2"
+                >
+                    <span aria-hidden="true">←</span>
+                    Kembali ke Siswa Binaan
+                </Link>
+
+                <div className="mb-8 mt-4">
+                    <h1 className="text-2xl font-bold leading-tight text-black-normal sm:text-3xl">
+                        Catatan Harian
+                    </h1>
+                    <p className="mt-2 text-sm text-black-muted">
+                        Buat catatan perkembangan baru untuk {student.name}.
+                    </p>
+                </div>
 
                 <div className="flex flex-col gap-6">
                     {saved && (
