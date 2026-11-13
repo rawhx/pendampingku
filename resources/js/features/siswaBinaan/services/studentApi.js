@@ -59,6 +59,57 @@ export function updateStudent(studentId, payload) {
     });
 }
 
+export async function getStudentObservations(studentId) {
+    const response = await axios.get(`/api/students/${studentId}/observations`);
+
+    return response.data.data;
+}
+
+export async function getStudentObservation(studentId, observationId) {
+    const response = await axios.get(
+        `/api/students/${studentId}/observations/${observationId}`,
+    );
+
+    return response.data.data;
+}
+
+export async function createStudentObservation(studentId, payload) {
+    const formData = new FormData();
+
+    Object.entries(payload).forEach(([key, value]) => {
+        if (key === 'files') {
+            value.forEach((file) => formData.append('files[]', file));
+            return;
+        }
+
+        if (key === 'rubric' || key === 'qualitative' || key === 'ai_recommendation') {
+            formData.append(key, JSON.stringify(value));
+            return;
+        }
+
+        formData.append(
+            key,
+            typeof value === 'boolean' ? (value ? '1' : '0') : String(value),
+        );
+    });
+
+    const response = await axios.post(
+        `/api/students/${studentId}/observations`,
+        formData,
+    );
+
+    return response.data.data;
+}
+
+export async function generateStudentRecommendation(studentId, fieldNotes) {
+    const response = await axios.post(
+        `/api/students/${studentId}/observations/generate-ai`,
+        { field_notes: fieldNotes },
+    );
+
+    return response.data.data;
+}
+
 export function invalidateStudentsCache() {
     studentsCache = null;
     studentCache.clear();

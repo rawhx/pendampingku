@@ -1,4 +1,3 @@
-import { getStudentNotes } from '@/features/catatanHarian/utils/catatanHarianStorage';
 import { rubricCategories } from '@/features/catatanHarian/data/catatanHarian';
 
 const shortTitles = {
@@ -19,8 +18,13 @@ const insights = {
     F: 'Sesuaikan instruksi akademik dengan kekuatan belajar dan berikan target bertahap.',
 };
 
-export function getStudentReport(student) {
-    const notes = getStudentNotes(student.id).sort(
+export function getStudentReport(student, observations = []) {
+    const notes = observations.map((observation) => ({
+        ...observation,
+        date: observation.observed_on,
+        notes: observation.field_notes,
+        savedAt: observation.created_at,
+    })).sort(
         (first, second) =>
             new Date(second.savedAt ?? second.date ?? 0) -
             new Date(first.savedAt ?? first.date ?? 0),

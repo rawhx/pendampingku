@@ -66,7 +66,8 @@ export default function CatatanHarianPage() {
 
                     {Object.keys(catatan.errors).length > 0 && (
                         <div role="alert" className="rounded-2xl border border-red-normal/30 bg-red-light px-5 py-4 text-sm text-red-dark">
-                            Lengkapi semua input wajib sebelum melanjutkan atau menyimpan catatan.
+                            {catatan.errors.form ||
+                                'Lengkapi semua input wajib sebelum melanjutkan atau menyimpan catatan.'}
                         </div>
                     )}
 
@@ -107,6 +108,8 @@ export default function CatatanHarianPage() {
                                 recommendation={catatan.recommendation}
                                 onApplyIntervention={catatan.applyIntervention}
                                 onVariantChange={catatan.changeVariant}
+                                isGenerating={catatan.isGenerating}
+                                aiError={catatan.aiError}
                             />
                             <StrategySection
                                 value={catatan.form.strategy}

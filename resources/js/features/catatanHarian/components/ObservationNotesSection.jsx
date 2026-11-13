@@ -8,6 +8,8 @@ export default function ObservationNotesSection({
     onApplyIntervention,
     onVariantChange,
     error,
+    isGenerating,
+    aiError,
 }) {
     return (
         <SectionCard
@@ -38,6 +40,11 @@ export default function ObservationNotesSection({
                             className={`h-[240px] w-full resize-none rounded-[28px] border-0 bg-white px-6 py-4 text-justify text-base text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none transition focus:ring-2 focus:ring-blue-normal/20 ${error ? 'ring-2 ring-red-normal/70' : ''}`}
                         />
                         {error && <p className="text-xs text-red-normal">{error}</p>}
+                        {aiError && (
+                            <p role="alert" className="text-xs text-red-normal">
+                                {aiError}
+                            </p>
+                        )}
 
                         <div className="flex items-center gap-2">
                             <img
@@ -102,7 +109,8 @@ export default function ObservationNotesSection({
                             <button
                                 type="button"
                                 onClick={onVariantChange}
-                                className="gradient-primary flex h-12 items-center gap-2.5 rounded-[28px] px-6 text-base font-semibold text-white shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/40 focus-visible:ring-offset-2"
+                                disabled={isGenerating}
+                                className="gradient-primary flex h-12 items-center gap-2.5 rounded-[28px] px-6 text-base font-semibold text-white shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
                             >
                                 <img
                                     src={icons.repeat}
@@ -110,7 +118,7 @@ export default function ObservationNotesSection({
                                     aria-hidden="true"
                                     className="h-5 w-5 shrink-0"
                                 />
-                                Variasi Baru
+                                {isGenerating ? 'Menganalisis...' : 'Variasi Baru'}
                             </button>
                         </div>
                     </div>

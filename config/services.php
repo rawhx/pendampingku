@@ -41,4 +41,28 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'ai' => [
+        'provider' => env('AI_PROVIDER', 'openai'),
+        'timeout' => env('AI_TIMEOUT', 30),
+        'retries' => env('AI_RETRIES', 3),
+        'openai' => [
+            'key' => env('OPENAI_API_KEY'),
+            'url' => env('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions'),
+            'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+        ],
+        'gemini' => [
+            'key' => env('GEMINI_API_KEY'),
+            'base_url' => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta/models'),
+            'models' => array_filter(array_map('trim', explode(',', env(
+                'GEMINI_MODELS',
+                'gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-flash-lite'
+            )))),
+        ],
+    ],
+
+    'supabase' => [
+        'url' => env('SUPABASE_URL'),
+        'service_role_key' => env('SUPABASE_SERVICE_ROLE_KEY'),
+        'bucket' => env('SUPABASE_STORAGE_BUCKET', 'student-observations'),
+    ],
 ];

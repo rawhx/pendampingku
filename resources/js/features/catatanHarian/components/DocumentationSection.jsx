@@ -36,7 +36,11 @@ export default function DocumentationSection({ files = [], requiredError, onFile
             accepted.push({
                 id: `upload-${file.name}-${Date.now()}-${accepted.length}`,
                 name: file.name.replace(/\.[^.]+$/, ''),
+                originalName: file.name,
+                sizeBytes: file.size,
                 size: formatFileSize(file.size),
+                type: file.type,
+                file,
                 status: 'Unggah Selesai',
                 thumbnail: URL.createObjectURL(file),
                 isDemo: false,

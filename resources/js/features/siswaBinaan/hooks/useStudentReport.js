@@ -1,15 +1,39 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getStudentReport } from '../data/studentReport';
+import { getStudentObservations } from '../services/studentApi';
 
 export default function useStudentReport(student) {
     const [query, setQuery] = useState('');
     const [sortOrder, setSortOrder] = useState('newest');
     const [dateFilter, setDateFilter] = useState('');
     const [visibleNotes, setVisibleNotes] = useState(3);
+    const [observations, setObservations] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        let isCurrent = true;
+
+        if (!student) {
+            return undefined;
+        }
+
+        setIsLoading(true);
+        getStudentObservations(student.id)
+            .then((data) => {
+                if (isCurrent) setObservations(data);
+            })
+            .finally(() => {
+                if (isCurrent) setIsLoading(false);
+            });
+
+        return () => {
+            isCurrent = false;
+        };
+    }, [student]);
 
     const { notes, metrics } = useMemo(
-        () => (student ? getStudentReport(student) : { notes: [], metrics: [] }),
-        [student],
+        () => (student ? getStudentReport(student, observations) : { notes: [], metrics: [] }),
+        [observations, student],
     );
 
     const filteredNotes = useMemo(() => {
@@ -68,5 +92,6 @@ export default function useStudentReport(student) {
         updateSortOrder,
         updateDateFilter,
         showMoreNotes: () => setVisibleNotes((current) => current + 3),
+        isLoading,
     };
 }

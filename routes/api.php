@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\MeController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\StudentObservationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -26,3 +27,10 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->apiResource('students', StudentController::class)
     ->only(['index', 'store', 'show', 'update']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('students/{student}/observations', [StudentObservationController::class, 'index']);
+    Route::post('students/{student}/observations', [StudentObservationController::class, 'store']);
+    Route::get('students/{student}/observations/{observation}', [StudentObservationController::class, 'show']);
+    Route::post('students/{student}/observations/generate-ai', [StudentObservationController::class, 'generate']);
+})->scopeBindings();
