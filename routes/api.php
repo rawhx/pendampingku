@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\MeController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
+use App\Http\Controllers\Api\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -22,3 +23,6 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', LogoutController::class);
     });
 });
+
+Route::middleware('auth:sanctum')->apiResource('students', StudentController::class)
+    ->only(['index', 'store', 'show', 'update']);
