@@ -22,6 +22,16 @@ Route::get('/siswa-binaan', function () {
     return Inertia::render('siswaBinaan/SiswaBinaanPage');
 })->name('siswa-binaan');
 
+Route::get('/siswa-binaan/tambah', function () {
+    return Inertia::render('siswaBinaan/TambahSiswaPage');
+})->name('siswa-binaan.create');
+
+Route::get('/siswa-binaan/{student}/edit', function (string $student) {
+    return Inertia::render('siswaBinaan/EditSiswaPage', [
+        'studentId' => $student,
+    ]);
+})->name('siswa-binaan.edit');
+
 Route::get('/siswa-binaan/{student}/catatan-harian', function (string $student) {
     return Inertia::render('siswaBinaan/CatatanHarianPage', [
         'studentId' => $student,

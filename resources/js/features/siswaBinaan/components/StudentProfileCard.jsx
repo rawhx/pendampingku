@@ -44,7 +44,7 @@ export default function StudentProfileCard({ student }) {
                 <p className="min-w-0 break-words">{student.insight}</p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                <button type="button" className="h-11 rounded-full bg-blue-normal px-6 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[150px]">Lihat Profil</button>
+                <Link href={route('siswa-binaan.edit', student.id)} className="flex h-11 items-center justify-center rounded-full bg-blue-normal px-6 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[150px]">Lihat Profil</Link>
                 <Link href={route('siswa-binaan.catatan-harian', student.id)} className="flex h-11 items-center justify-center rounded-full border border-blue-normal bg-white px-6 text-sm font-semibold text-blue-normal transition hover:bg-blue-light focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[120px]">Catat</Link>
             </div>
         </div>

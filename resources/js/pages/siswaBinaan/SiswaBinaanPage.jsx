@@ -1,4 +1,3 @@
-import AddStudentModal from '@/features/siswaBinaan/components/AddStudentModal';
 import StudentProfileCard from '@/features/siswaBinaan/components/StudentProfileCard';
 import StudentSummaryStats from '@/features/siswaBinaan/components/StudentSummaryStats';
 import StudentToolbar from '@/features/siswaBinaan/components/StudentToolbar';
@@ -9,30 +8,21 @@ import { useMemo, useState } from 'react';
 
 export default function SiswaBinaanPage() {
     const [query, setQuery] = useState('');
-    const [showAddStudent, setShowAddStudent] = useState(false);
-    const [studentList, setStudentList] = useState(students);
 
     const filteredStudents = useMemo(() => {
         const normalizedQuery = query.trim().toLowerCase();
 
         if (!normalizedQuery) {
-            return studentList;
+            return students;
         }
 
-        return studentList.filter((student) =>
+        return students.filter((student) =>
             [student.name, student.nisn, student.className, student.condition]
                 .join(' ')
                 .toLowerCase()
                 .includes(normalizedQuery),
         );
-    }, [query, studentList]);
-
-    const addStudent = (student) => {
-        setStudentList((current) => [
-            { ...student, id: `student-${Date.now()}` },
-            ...current,
-        ]);
-    };
+    }, [query]);
 
     return (
         <AuthenticatedLayout>
@@ -54,7 +44,6 @@ export default function SiswaBinaanPage() {
                         <StudentToolbar
                             query={query}
                             onQueryChange={setQuery}
-                            onAddStudent={() => setShowAddStudent(true)}
                         />
 
                         <div className="mt-6 flex flex-col gap-5">
@@ -74,12 +63,6 @@ export default function SiswaBinaanPage() {
                     </section>
                 </div>
             </div>
-
-            <AddStudentModal
-                show={showAddStudent}
-                onClose={() => setShowAddStudent(false)}
-                onSubmit={addStudent}
-            />
         </AuthenticatedLayout>
     );
 }

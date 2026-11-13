@@ -1,6 +1,7 @@
+import { Link } from '@inertiajs/react';
 import StudentIcon from './StudentIcon';
 
-export default function StudentToolbar({ query, onQueryChange, onAddStudent }) {
+export default function StudentToolbar({ query, onQueryChange }) {
     return (
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row">
@@ -16,10 +17,10 @@ export default function StudentToolbar({ query, onQueryChange, onAddStudent }) {
                     </select>
                 </div>
             </div>
-            <button type="button" onClick={onAddStudent} className="flex h-12 w-full shrink-0 items-center justify-center gap-2 rounded-full bg-blue-normal px-5 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:w-auto">
+            <Link href={route('siswa-binaan.create')} className="flex h-12 w-full shrink-0 items-center justify-center gap-2 rounded-full bg-blue-normal px-5 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:w-auto">
                 <StudentIcon name="plus" className="h-5 w-5" />
                 Tambah Siswa Baru
-            </button>
+            </Link>
         </div>
     ) 
 }
