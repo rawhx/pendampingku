@@ -1,20 +1,37 @@
+import { icons } from '@/assets/icons/icons';
+import ObservationHistoryCard from '@/features/siswaBinaan/components/ObservationHistoryCard';
+import ReportProgressCard from '@/features/siswaBinaan/components/ReportProgressCard';
+import StudentRadarChart from '@/features/siswaBinaan/components/StudentRadarChart';
+import { getStudentReport } from '@/features/siswaBinaan/data/studentReport';
 import { students } from '@/features/siswaBinaan/data/students';
-import { getStudentMetrics } from '@/features/siswaBinaan/data/studentMetrics';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { useMemo, useState } from 'react';
 
-function BackIcon() {
+function SearchIcon() {
     return (
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-            <path d="M19 12H5" />
-            <path d="m12 19-7-7 7-7" />
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-black-light-hover">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-4-4" />
         </svg>
+    );
+}
+
+function EmptyState() {
+    return (
+        <div className="rounded-2xl bg-white-light-active px-6 py-10 text-center text-sm text-black-muted">
+            Belum ada catatan observasi untuk siswa ini.
+        </div>
     );
 }
 
 export default function LaporanSiswaPage() {
     const { studentId } = usePage().props;
     const student = students.find((item) => item.id === studentId);
+    const [query, setQuery] = useState('');
+    const [sortOrder, setSortOrder] = useState('newest');
+    const [dateFilter, setDateFilter] = useState('');
+    const [visibleNotes, setVisibleNotes] = useState(3);
 
     if (!student) {
         return (
@@ -30,67 +47,161 @@ export default function LaporanSiswaPage() {
         );
     }
 
-    const metrics = getStudentMetrics(student);
+    const { notes, metrics } = getStudentReport(student);
+    const filteredNotes = useMemo(() => {
+        const filtered = notes.filter((note) => {
+            const matchesQuery = [
+                note.subject,
+                note.notes,
+                note.qualitative?.factual,
+                note.date,
+            ]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase()
+                .includes(query.trim().toLowerCase());
+            const matchesDate = !dateFilter || note.date === dateFilter;
+
+            return matchesQuery && matchesDate;
+        });
+
+        return filtered.sort((first, second) => {
+            const firstDate = new Date(first.savedAt ?? first.date ?? 0);
+            const secondDate = new Date(second.savedAt ?? second.date ?? 0);
+
+            return sortOrder === 'newest'
+                ? secondDate - firstDate
+                : firstDate - secondDate;
+        });
+    }, [dateFilter, notes, query, sortOrder]);
+    const latestNote = notes[0];
 
     return (
         <AuthenticatedLayout>
             <Head title={`Laporan ${student.name}`} />
 
-            <div className="relative overflow-hidden bg-white-light-hover px-4 pb-16 pt-28 sm:px-6 lg:px-8 lg:pb-20 lg:pt-36">
+            <div className="relative overflow-hidden bg-white-light-hover px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pt-36">
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -left-[280px] top-[180px] h-[335px] w-[335px] rounded-full bg-blue-normal/40 blur-[50px]" />
-                    <div className="absolute -right-[280px] top-[500px] h-[335px] w-[335px] rounded-full bg-blue-normal/40 blur-[50px]" />
+                    <div className="absolute -right-[280px] top-[780px] h-[335px] w-[335px] rounded-full bg-blue-normal/40 blur-[50px]" />
                 </div>
 
-                <div className="relative mx-auto w-full max-w-6xl">
-                    <Link href={route('siswa-binaan')} className="inline-flex items-center gap-2 text-sm font-semibold text-blue-normal transition hover:text-blue-normal-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2">
-                        <BackIcon />
-                        Kembali ke Siswa Binaan
-                    </Link>
+                <div className="relative mx-auto w-full max-w-7xl">
+                    <section className="rounded-3xl border-t-[20px] border-[#92CCFF] bg-white px-5 py-4 shadow-[0_0_14px_rgba(0,129,242,0.08)]">
+                        <h1 className="text-xl font-bold leading-[1.2] text-blue-normal">{student.name}</h1>
+                        <p className="mt-1 text-xs leading-[1.2] text-black-normal">{student.className} • {student.condition} • {student.age}</p>
+                        <p className="mt-2 text-xs leading-[1.2] text-black-muted">NISN: {student.nisn}</p>
+                    </section>
 
-                    <div className="mb-8 mt-4">
-                        <h1 className="text-2xl font-bold leading-tight text-black-normal sm:text-3xl">Laporan Siswa</h1>
-                        <p className="mt-2 text-sm text-black-muted">Ringkasan perkembangan dan catatan pendampingan siswa.</p>
+                    <div className="mt-5 grid gap-5 border-b-4 border-[#EDEDED] pb-6 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:items-center">
+                        <section className="min-w-0">
+                            <StudentRadarChart metrics={metrics} />
+                        </section>
+
+                        <section className="min-w-0 rounded-3xl border-t-4 border-blue-normal bg-white px-4 py-5 shadow-[0_0_2px_rgba(0,0,0,0.08)]">
+                            <div className="flex items-center justify-between gap-3">
+                                <span className="flex items-center gap-2 rounded-3xl border border-[#92CCFF] bg-white px-3 py-1">
+                                    <img
+                                        src={icons.sparkle}
+                                        alt=""
+                                        aria-hidden="true"
+                                        className="h-6 w-6 shrink-0"
+                                    />
+                                    <span className="text-base text-black-normal">
+                                        AI Powered Assistant
+                                    </span>
+                                </span>
+                                <span className="text-base leading-[1.2] text-white-dark">{notes.length * 6} Observasi Sepekan</span>
+                            </div>
+                            <h2 className="mt-5 text-base leading-[1.2] text-black-normal">Analisis Capaian & Rekomendasi Scaffolding</h2>
+                            <div className="mt-4 min-h-[210px] max-h-[300px] overflow-y-auto rounded-[28px] bg-white px-5 py-4 text-justify text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)]">
+                                <p>
+                                    <span className="font-bold text-blue-normal">Kemandirian & Regulasi Diri:</span>{' '}
+                                    {latestNote?.qualitative?.factual || student.insight}
+                                </p>
+                                <p className="mt-3">
+                                    <span className="font-bold text-blue-normal">Komunikasi & Sosial:</span>{' '}
+                                    Gunakan hasil observasi untuk menyusun dukungan yang konsisten pada sesi berikutnya.
+                                </p>
+                            </div>
+                        </section>
                     </div>
 
-                    <div className="flex flex-col gap-6">
-                        <section className="rounded-3xl bg-white p-5 shadow-[0_0_14px_rgba(0,129,242,0.08)] sm:p-7">
-                            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                                <div>
-                                    <h2 className="text-xl font-semibold text-blue-normal">{student.name}</h2>
-                                    <p className="mt-1 text-sm text-black-muted">{student.className} • {student.condition} • {student.age}</p>
-                                </div>
-                                <span className="w-fit rounded-full bg-green-normal px-3 py-1 text-xs font-semibold text-white">{student.status.label}</span>
-                            </div>
-                        </section>
-
-                        <section className="rounded-3xl bg-white p-5 shadow-[0_0_14px_rgba(0,129,242,0.08)] sm:p-7">
-                            <h2 className="text-lg font-semibold text-black-normal sm:text-xl">Ringkasan Perkembangan</h2>
-                            <div className="mt-6 grid gap-6 sm:grid-cols-2">
-                                {metrics.map((metric) => (
-                                    <div key={metric.label}>
-                                        <div className="flex items-start justify-between gap-3 text-sm">
-                                            <span className="break-words text-black-normal">{metric.label}</span>
-                                            <span className="shrink-0 font-bold text-blue-normal">{metric.value}</span>
-                                        </div>
-                                        <div className="mt-3 h-3 overflow-hidden rounded-full bg-white-dark/70">
-                                            <div className="h-full rounded-full bg-blue-normal" style={{ width: `${metric.percent}%` }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="rounded-3xl bg-white p-5 shadow-[0_0_14px_rgba(0,129,242,0.08)] sm:p-7">
-                            <h2 className="text-lg font-semibold text-black-normal sm:text-xl">Catatan Terakhir</h2>
-                            <p className="mt-4 rounded-2xl bg-white-light-active px-4 py-4 text-sm leading-relaxed text-black-normal">{student.insight}</p>
-                        </section>
-
-                        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                            <Link href={route('siswa-binaan.catatan-harian', student.id)} className="flex h-11 items-center justify-center rounded-full border border-blue-normal bg-white px-6 text-sm font-semibold text-blue-normal transition hover:bg-blue-light focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2">Buat Catatan Harian</Link>
-                            <Link href={route('siswa-binaan.edit', student.id)} className="flex h-11 items-center justify-center rounded-full bg-blue-normal px-6 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2">Edit Data Siswa</Link>
+                    <section className="mt-5 border-b-4 border-[#EDEDED] pb-8">
+                        <div className="mb-6 flex flex-col gap-2">
+                            <h2 className="text-[28px] font-semibold leading-[1.2] text-blue-normal sm:text-[32px]">Capaian 6 Aspek Perkembangan Siswa</h2>
+                            <p className="text-base leading-[1.2] text-white-dark">Rata-rata level dukungan scaffolding berdasarkan {notes.length * 6} data observasi sepekan</p>
                         </div>
-                    </div>
+                        <div className="grid gap-5 md:grid-cols-2">
+                            {metrics.map((metric) => (
+                                <ReportProgressCard key={metric.id} metric={metric} observationCount={notes.length} insight={metric.insight} />
+                            ))}
+                        </div>
+                    </section>
+
+                    <section className="mt-8 px-0 sm:px-5 sm:py-6">
+                        <div className="mb-8 flex flex-col gap-2">
+                            <h2 className="text-[28px] font-semibold leading-[1.2] text-blue-normal sm:text-[32px]">Riwayat Catatan Observasi</h2>
+                            <p className="text-base leading-[1.2] text-white-dark">Daftar sesi pendampingan dan observasi harian siswa</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-5">
+                            <label className="relative col-span-2 w-full sm:w-[400px] sm:shrink-0">
+                                <span className="sr-only">Cari catatan observasi</span>
+                                <span aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2">
+                                    <SearchIcon />
+                                </span>
+                                <input
+                                    value={query}
+                                    onChange={(event) => {
+                                        setQuery(event.target.value);
+                                        setVisibleNotes(3);
+                                    }}
+                                    placeholder="Cari nama siswa, Kelas"
+                                    className="h-12 w-full rounded-[28px] border-0 bg-white py-0 pl-12 pr-4 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none placeholder:text-[#D1D4D7] focus:ring-2 focus:ring-blue-normal/20"
+                                />
+                            </label>
+
+                            <label className="relative w-full sm:w-fit sm:shrink-0">
+                                <span className="sr-only">Urutkan catatan</span>
+                                <select
+                                    value={sortOrder}
+                                    onChange={(event) => {
+                                        setSortOrder(event.target.value);
+                                        setVisibleNotes(3);
+                                    }}
+                                    className="h-12 w-full appearance-none rounded-[28px] border-0 bg-white py-0 pl-4 pr-8 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none focus:ring-2 focus:ring-blue-normal/20 sm:w-fit sm:pl-5 sm:pr-10"
+                                >
+                                    <option value="newest">Terbaru</option>
+                                    <option value="oldest">Terlama</option>
+                                </select>
+                            </label>
+
+                            <label className="relative w-full sm:w-fit sm:shrink-0">
+                                <span className="sr-only">Filter tanggal</span>
+                                <input
+                                    type="date"
+                                    value={dateFilter}
+                                    onChange={(event) => {
+                                        setDateFilter(event.target.value);
+                                        setVisibleNotes(3);
+                                    }}
+                                    className="h-12 w-full rounded-[28px] border-0 bg-white px-3 py-0 text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none focus:ring-2 focus:ring-blue-normal/20 sm:w-fit sm:px-5"
+                                />
+                            </label>
+                        </div>
+
+                        <div className="mt-5 flex flex-col gap-3">
+                            {filteredNotes.length === 0 ? <EmptyState /> : filteredNotes.slice(0, visibleNotes).map((note, index) => <ObservationHistoryCard key={`${note.savedAt ?? note.date}-${index}`} note={note} student={student} />)}
+                        </div>
+
+                        {filteredNotes.length > visibleNotes && (
+                            <button type="button" onClick={() => setVisibleNotes((current) => current + 3)} className="mx-auto mt-5 flex h-11 items-center justify-center rounded-full bg-blue-normal px-7 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2">
+                                Selengkapnya
+                            </button>
+                        )}
+                    </section>
+
                 </div>
             </div>
         </AuthenticatedLayout>
