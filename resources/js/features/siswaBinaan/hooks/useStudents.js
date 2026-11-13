@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getStudents } from '../services/studentApi';
+import { getStudentObservations, getStudents } from '../services/studentApi';
 import { getStudentSummaryStats, toStudentUi } from '../utils/studentMapper';
 
 export default function useStudents() {
@@ -14,9 +14,15 @@ export default function useStudents() {
         const loadStudents = async () => {
             try {
                 const data = await getStudents();
+                const studentsWithObservations = await Promise.all(
+                    data.map(async (student) => ({
+                        ...toStudentUi(student),
+                        observations: await getStudentObservations(student.id),
+                    })),
+                );
 
                 if (isCurrent) {
-                    setStudents(data.map(toStudentUi));
+                    setStudents(studentsWithObservations);
                 }
             } catch {
                 if (isCurrent) {

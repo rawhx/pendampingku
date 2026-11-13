@@ -6,7 +6,7 @@ import { getStudentMetrics } from '@/features/siswaBinaan/data/studentMetrics';
 const statusTone = { success: 'bg-green-normal text-white', warning: 'bg-orange-normal text-white' };
 
 export default function StudentProfileCard({ student }) {
-    const metrics = getStudentMetrics(student);
+    const metrics = getStudentMetrics(student, student.observations);
 
     return <article className="rounded-3xl bg-white/75 py-4 px-4 shadow-[0_0_14px_rgba(0,129,242,0.08)] sm:py-5 sm:px-6 lg:py-6 lg:px-8">
         <div className="flex flex-col gap-4">
@@ -27,7 +27,9 @@ export default function StudentProfileCard({ student }) {
                         <div key={metric.label} className="min-w-0">
                             <div className="flex items-start justify-between gap-3 text-sm">
                                 <span className="min-w-0 break-words text-black-normal">{metric.label}</span>
-                                <span className="shrink-0 font-bold text-blue-normal">{metric.value}</span>
+                                <span className="shrink-0 font-bold text-blue-normal">
+                                    {metric.maxScore ? ` ${metric.percent}%` : '0%'}
+                                </span>
                             </div>
                             <div role="progressbar" aria-label={metric.label} aria-valuemin="0" aria-valuemax="100" aria-valuenow={metric.percent} className="mt-2 h-2 overflow-hidden rounded-full bg-white-dark/70">
                                 <div className="h-full rounded-full bg-blue-normal" style={{ width: `${metric.percent}%` }} />

@@ -15,7 +15,9 @@ export default function ReportProgressCard({ metric, observationCount, insight }
             <div className="rounded-3xl bg-white-light-active px-5 py-4 shadow-[0_0_2px_rgba(0,0,0,0.08)]">
                 <div className="flex items-center justify-between gap-3 text-base leading-[1.2]">
                     <span className="text-black-normal">{metric.shortTitle}</span>
-                    <span className="font-bold text-blue-normal">{metric.value}</span>
+                    <span className="font-bold text-blue-normal">
+                        {metric.maxScore ? ` ${metric.percent}%` : '0%'}
+                    </span>
                 </div>
                 <div className="mt-4 h-2 overflow-hidden rounded-full bg-black-light-active">
                     <div

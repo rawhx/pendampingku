@@ -31,21 +31,32 @@ export function getStudentReport(student, observations = []) {
     );
 
     const metrics = rubricCategories.map((category) => {
-        const values = notes.flatMap((note) =>
-            category.items
-                .map((item) => Number(note.rubric?.[item.id]))
-                .filter((value) => Number.isFinite(value) && value >= 0 && value <= 4),
-        );
-        const percent = values.length
-            ? Math.round((values.reduce((total, value) => total + value, 0) / values.length / 4) * 100)
+        const rubricScores = notes.flatMap((note) => {
+            if (Array.isArray(note.rubrics)) {
+                return note.rubrics
+                    .filter((rubric) =>
+                        category.items.some((item) => item.id === rubric.rubric_code),
+                    )
+                    .map((rubric) => Number(rubric.score));
+            }
+
+            return category.items.map((item) => Number(note.rubric?.[item.id]));
+        }).filter((value) => Number.isFinite(value) && value >= 0 && value <= 4);
+        const totalScore = rubricScores.reduce((total, value) => total + value, 0);
+        const maxScore = rubricScores.length * 4;
+        const percent = maxScore
+            ? Math.round((totalScore / maxScore) * 100)
             : 0;
 
         return {
             id: category.id,
             title: category.title,
             shortTitle: shortTitles[category.id],
-            value: values.length ? `${percent}%` : 'Belum ada data',
+            value: maxScore ? `${totalScore}/${maxScore}` : 'Belum ada data',
             percent,
+            totalScore,
+            maxScore,
+            answeredCount: rubricScores.length,
             observationCount: notes.length,
             insight: insights[category.id],
         };

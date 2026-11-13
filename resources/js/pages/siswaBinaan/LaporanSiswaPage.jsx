@@ -102,7 +102,7 @@ export default function LaporanSiswaPage() {
                                         AI Powered Assistant
                                     </span>
                                 </span>
-                                <span className="text-base leading-[1.2] text-white-dark">{notes.length * 6} Observasi Sepekan</span>
+                                <span className="text-base leading-[1.2] text-white-dark">{notes.length} Catatan Observasi</span>
                             </div>
                             <h2 className="mt-5 text-base leading-[1.2] text-black-normal">Analisis Capaian & Rekomendasi Scaffolding</h2>
                             <div className="mt-4 min-h-[210px] max-h-[300px] overflow-y-auto rounded-[28px] bg-white px-5 py-4 text-justify text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)]">
@@ -121,7 +121,7 @@ export default function LaporanSiswaPage() {
                     <section className="mt-5 border-b-4 border-[#EDEDED] pb-8">
                         <div className="mb-6 flex flex-col gap-2">
                             <h2 className="text-[28px] font-semibold leading-[1.2] text-blue-normal sm:text-[32px]">Capaian 6 Aspek Perkembangan Siswa</h2>
-                            <p className="text-base leading-[1.2] text-white-dark">Rata-rata level dukungan scaffolding berdasarkan {notes.length * 6} data observasi sepekan</p>
+                            <p className="text-base leading-[1.2] text-white-dark">Total skor tiap matriks dari {notes.length} catatan observasi</p>
                         </div>
                         <div className="grid gap-5 md:grid-cols-2">
                             {metrics.map((metric) => (
