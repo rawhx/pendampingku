@@ -1,14 +1,13 @@
-import BehaviorTagsSection from '@/features/catatanHarian/components/BehaviorTagsSection';
 import DocumentationSection from '@/features/catatanHarian/components/DocumentationSection';
 import EmotionCheckInSection from '@/features/catatanHarian/components/EmotionCheckInSection';
 import FormActions from '@/features/catatanHarian/components/FormActions';
 import ObservationNotesSection from '@/features/catatanHarian/components/ObservationNotesSection';
+import QualitativeSection from '@/features/catatanHarian/components/QualitativeSection';
+import RubricSection from '@/features/catatanHarian/components/RubricSection';
 import SessionDetailsSection from '@/features/catatanHarian/components/SessionDetailsSection';
 import StrategySection from '@/features/catatanHarian/components/StrategySection';
 import VisibilitySection from '@/features/catatanHarian/components/VisibilitySection';
 import {
-    activityOptions,
-    behaviorTags,
     createInitialForm,
     emotionOptions,
     getAiRecommendation,
@@ -37,6 +36,14 @@ function loadForm(student) {
         return {
             ...initialForm,
             ...saved,
+            rubric: {
+                ...initialForm.rubric,
+                ...(saved.rubric ?? {}),
+            },
+            qualitative: {
+                ...initialForm.qualitative,
+                ...(saved.qualitative ?? {}),
+            },
             files: initialForm.files,
         };
     } catch {
@@ -54,6 +61,7 @@ export default function CatatanHarianPage() {
     const [form, setForm] = useState(() => loadForm(student));
     const [errors, setErrors] = useState({});
     const [saved, setSaved] = useState(false);
+    const [step, setStep] = useState(1);
     const [variantIndex, setVariantIndex] = useState(0);
 
     const recommendation = useMemo(
@@ -67,12 +75,24 @@ export default function CatatanHarianPage() {
         setErrors((current) => ({ ...current, [field]: undefined }));
     };
 
-    const toggleBehaviorTag = (tagId) => {
+    const updateRubric = (itemId, value) => {
         setForm((current) => ({
             ...current,
-            behaviorTags: current.behaviorTags.includes(tagId)
-                ? current.behaviorTags.filter((id) => id !== tagId)
-                : [...current.behaviorTags, tagId],
+            rubric: {
+                ...current.rubric,
+                [itemId]: value,
+            },
+        }));
+        setSaved(false);
+    };
+
+    const updateQualitative = (field, value) => {
+        setForm((current) => ({
+            ...current,
+            qualitative: {
+                ...current.qualitative,
+                [field]: value,
+            },
         }));
         setSaved(false);
     };
@@ -108,7 +128,7 @@ export default function CatatanHarianPage() {
         setSaved(false);
     };
 
-    const saveNote = () => {
+    const validateSession = () => {
         const nextErrors = {};
 
         if (!form.date) {
@@ -125,13 +145,43 @@ export default function CatatanHarianPage() {
             nextErrors.endTime = 'Jam selesai harus setelah jam mulai.';
         }
 
-        if (!form.activity) {
-            nextErrors.activity = 'Kegiatan wajib dipilih.';
+        if (!form.subject?.trim()) {
+            nextErrors.subject = 'Mata pelajaran wajib diisi.';
         }
 
         setErrors(nextErrors);
 
-        if (Object.keys(nextErrors).length > 0) {
+        return Object.keys(nextErrors).length === 0;
+    };
+
+    const goNext = () => {
+        if (!validateSession()) {
+            setSaved(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        setForm((current) => ({
+            ...current,
+            notes:
+                current.notes?.trim() || current.qualitative?.factual
+                    ? current.notes?.trim() || current.qualitative.factual
+                    : current.notes,
+        }));
+        setSaved(false);
+        setStep(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const goBack = () => {
+        setSaved(false);
+        setStep(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const saveNote = () => {
+        if (!validateSession()) {
+            setStep(1);
             setSaved(false);
             return;
         }
@@ -169,55 +219,78 @@ export default function CatatanHarianPage() {
                         </div>
                     )}
 
-                    <SessionDetailsSection
-                        date={form.date}
-                        startTime={form.startTime}
-                        endTime={form.endTime}
-                        activity={form.activity}
-                        activityOptions={activityOptions}
-                        errors={errors}
-                        onChange={updateField}
-                    />
+                    {step === 1 ? (
+                        <>
+                            <SessionDetailsSection
+                                date={form.date}
+                                startTime={form.startTime}
+                                endTime={form.endTime}
+                                subject={form.subject}
+                                errors={errors}
+                                onChange={updateField}
+                            />
 
-                    <EmotionCheckInSection
-                        value={form.emotion}
-                        options={emotionOptions}
-                        onChange={(emotion) => updateField('emotion', emotion)}
-                    />
+                            <EmotionCheckInSection
+                                value={form.emotion}
+                                options={emotionOptions}
+                                onChange={(emotion) =>
+                                    updateField('emotion', emotion)
+                                }
+                            />
 
-                    <BehaviorTagsSection
-                        value={form.behaviorTags}
-                        options={behaviorTags}
-                        onToggle={toggleBehaviorTag}
-                    />
+                            <RubricSection
+                                answers={form.rubric}
+                                onSelect={updateRubric}
+                            />
 
-                    <ObservationNotesSection
-                        notes={form.notes}
-                        onNotesChange={(notes) => updateField('notes', notes)}
-                        recommendation={recommendation}
-                        onApplyIntervention={applyIntervention}
-                        onVariantChange={changeVariant}
-                    />
+                            <QualitativeSection
+                                values={form.qualitative}
+                                onChange={updateQualitative}
+                            />
 
-                    <StrategySection
-                        value={form.strategy}
-                        onChange={(strategy) => updateField('strategy', strategy)}
-                    />
+                            <FormActions step={1} onNext={goNext} />
+                        </>
+                    ) : (
+                        <>
+                            <ObservationNotesSection
+                                notes={form.notes}
+                                onNotesChange={(notes) =>
+                                    updateField('notes', notes)
+                                }
+                                recommendation={recommendation}
+                                onApplyIntervention={applyIntervention}
+                                onVariantChange={changeVariant}
+                            />
 
-                    <DocumentationSection
-                        files={form.files}
-                        onFilesChange={(files) => updateField('files', files)}
-                        onRemoveFile={removeFile}
-                    />
+                            <StrategySection
+                                value={form.strategy}
+                                onChange={(strategy) =>
+                                    updateField('strategy', strategy)
+                                }
+                            />
 
-                    <VisibilitySection
-                        student={student}
-                        parentReport={form.parentReport}
-                        discussTeacher={form.discussTeacher}
-                        onChange={updateField}
-                    />
+                            <DocumentationSection
+                                files={form.files}
+                                onFilesChange={(files) =>
+                                    updateField('files', files)
+                                }
+                                onRemoveFile={removeFile}
+                            />
 
-                    <FormActions onSave={saveNote} />
+                            <VisibilitySection
+                                student={student}
+                                parentReport={form.parentReport}
+                                discussTeacher={form.discussTeacher}
+                                onChange={updateField}
+                            />
+
+                            <FormActions
+                                step={2}
+                                onBack={goBack}
+                                onSave={saveNote}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>
