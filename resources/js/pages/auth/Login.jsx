@@ -8,7 +8,7 @@ import GoogleButton from '@/features/auth/ui/GoogleButton';
 import AuthDivider from '@/features/auth/ui/AuthDivider';
 import { appName } from '@/constants/app';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -69,14 +69,12 @@ export default function Login({ status, canResetPassword }) {
                 />
 
                 <div className="flex items-center justify-end pt-1">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="text-sm font-medium text-blue-normal hover:underline focus:outline-none"
-                        >
-                            Lupa kata sandi?
-                        </Link>
-                    )}
+                    <Link
+                        href={route('password.request')}
+                        className="text-sm font-medium text-blue-normal hover:underline focus:outline-none"
+                    >
+                        Lupa kata sandi?
+                    </Link>
                 </div>
 
                 <AuthSubmitButton
