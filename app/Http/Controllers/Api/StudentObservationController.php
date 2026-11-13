@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -174,7 +175,11 @@ class StudentObservationController extends Controller
             'observation' => $ownedObservation,
         ])
             ->setPaper('a4')
-            ->download("catatan-{$ownedStudent->nickname}-{$ownedObservation->created_at->format('Y-m-d')}.pdf");
+            ->download(sprintf(
+                '%s-%s.pdf',
+                Str::slug($ownedStudent->full_name),
+                $ownedObservation->observed_on?->format('Y-m-d') ?? 'tanpa-tanggal',
+            ));
     }
 
     public function generate(

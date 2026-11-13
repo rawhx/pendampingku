@@ -82,7 +82,10 @@ export async function downloadStudentObservationPdf(studentId, observationId) {
     const anchor = document.createElement('a');
 
     anchor.href = url;
-    anchor.download = `catatan-${studentId}-${observationId}.pdf`;
+    anchor.download =
+        response.headers['content-disposition']
+            ?.match(/filename="?([^"]+)"?/i)?.[1] ??
+        `catatan-${studentId}-${observationId}.pdf`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
