@@ -9,7 +9,7 @@ export default function SectionCard({
         <section className="flex flex-col gap-5 rounded-3xl bg-white px-8 py-6 shadow-[0_0_14px_rgba(0,129,242,0.08)]">
             <div className="flex items-end justify-between gap-4">
                 <h2 className="flex-1 text-lg font-semibold leading-tight text-blue-normal sm:text-xl">
-                    <span className="mr-2">{index}.</span>
+                    {index ? <span className="mr-2">{index}.</span> : null}
                     {title}
                 </h2>
 
