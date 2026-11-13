@@ -7,6 +7,7 @@ export default function ObservationNotesSection({
     recommendation,
     onApplyIntervention,
     onVariantChange,
+    error,
 }) {
     return (
         <SectionCard
@@ -34,8 +35,9 @@ export default function ObservationNotesSection({
                             onChange={(event) =>
                                 onNotesChange(event.target.value)
                             }
-                            className="h-[240px] w-full resize-none rounded-[28px] border-0 bg-white px-6 py-4 text-justify text-base text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none transition focus:ring-2 focus:ring-blue-normal/20"
+                            className={`h-[240px] w-full resize-none rounded-[28px] border-0 bg-white px-6 py-4 text-justify text-base text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none transition focus:ring-2 focus:ring-blue-normal/20 ${error ? 'ring-2 ring-red-normal/70' : ''}`}
                         />
+                        {error && <p className="text-xs text-red-normal">{error}</p>}
 
                         <div className="flex items-center gap-2">
                             <img

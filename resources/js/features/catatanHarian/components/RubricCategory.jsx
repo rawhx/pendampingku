@@ -6,6 +6,7 @@ export default function RubricCategory({
     category,
     answers,
     onSelect,
+    hasError = false,
     defaultOpen = false,
 }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -17,7 +18,7 @@ export default function RubricCategory({
                 type="button"
                 aria-expanded={open}
                 onClick={() => setOpen((current) => !current)}
-                className="flex w-full items-center justify-between gap-4 p-4 px-8 text-left transition hover:bg-white-light-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-normal/40"
+                className={`flex w-full items-center justify-between gap-4 border-l-4 p-4 px-8 text-left transition hover:bg-white-light-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-normal/40 ${hasError && answered < category.items.length ? 'border-red-normal' : 'border-transparent'}`}
             >
                 <span className="flex min-w-0 items-center gap-[11px]">
                     <span className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[8px] bg-blue-normal text-2xl font-bold text-white">
@@ -35,10 +36,10 @@ export default function RubricCategory({
 
                 <span className="flex shrink-0 items-center gap-4">
                     <span
-                        className={`rounded-full px-[10px] py-1 text-base font-bold text-white ${
+                        className={`rounded-full px-4 py-1 text-base font-bold text-white ${
                             answered === category.items.length
                                 ? 'bg-green-normal'
-                                : 'bg-white-dark'
+                                : 'bg-blue-light-active'
                         }`}
                     >
                         {answered}/{category.items.length} Terisi
@@ -73,7 +74,7 @@ export default function RubricCategory({
                                 </p>
                             </div>
 
-                            <div className="flex shrink-0 flex-wrap items-center gap-3 self-end sm:self-auto">
+                            <div className={`flex shrink-0 flex-wrap items-center gap-3 self-end rounded-xl sm:self-auto ${hasError && !answers[item.id] ? 'ring-2 ring-red-normal/70 ring-offset-2' : ''}`}>
                                 {rubricScale.map((option) => {
                                     const selected =
                                         answers[item.id] === option.value;

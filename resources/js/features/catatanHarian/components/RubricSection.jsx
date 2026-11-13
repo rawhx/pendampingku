@@ -2,7 +2,7 @@ import RubricCategory from './RubricCategory';
 import SectionCard from './SectionCard';
 import { rubricCategories, rubricScale } from '../data/catatanHarian';
 
-export default function RubricSection({ answers = {}, onSelect }) {
+export default function RubricSection({ answers = {}, hasError, onSelect }) {
     return (
         <div className="flex flex-col gap-5">
             <SectionCard
@@ -37,7 +37,8 @@ export default function RubricSection({ answers = {}, onSelect }) {
                         category={category}
                         answers={answers}
                         onSelect={onSelect}
-                        defaultOpen={category.id === 'B'}
+                        hasError={hasError}
+                        // defaultOpen={category.id === 'B'}
                     />
                 ))}
             </div>

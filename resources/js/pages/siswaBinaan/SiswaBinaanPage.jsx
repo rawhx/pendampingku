@@ -4,10 +4,33 @@ import StudentToolbar from '@/features/siswaBinaan/components/StudentToolbar';
 import { students, summaryStats } from '@/features/siswaBinaan/data/students';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function SiswaBinaanPage() {
     const [query, setQuery] = useState('');
+    const [notification, setNotification] = useState(() => {
+        if (typeof window === 'undefined') return '';
+
+        return window.sessionStorage.getItem('pendampingku:catatan-success') ?? '';
+    });
+
+    useEffect(() => {
+        if (!notification) {
+            return undefined;
+        }
+
+        const timer = window.setTimeout(() => {
+            window.sessionStorage.removeItem('pendampingku:catatan-success');
+            setNotification('');
+        }, 5000);
+
+        return () => window.clearTimeout(timer);
+    }, [notification]);
+
+    const dismissNotification = () => {
+        window.sessionStorage.removeItem('pendampingku:catatan-success');
+        setNotification('');
+    };
 
     const filteredStudents = useMemo(() => {
         const normalizedQuery = query.trim().toLowerCase();
@@ -27,6 +50,24 @@ export default function SiswaBinaanPage() {
     return (
         <AuthenticatedLayout>
             <Head title="Siswa Binaan" />
+
+            {notification && (
+                <div role="status" aria-live="polite" className="fixed right-4 top-24 z-[60] w-[min(360px,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-blue-light-active bg-white shadow-[0_12px_32px_rgba(0,97,182,0.18)] sm:right-6">
+                    <div className="h-1 w-full bg-gradient-to-r from-[#92CCFF] via-[#5DB3FF] to-blue-normal" />
+                    <div className="flex items-start gap-3 px-4 py-4">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-light text-green-dark">
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                <path d="m5 12 4 4L19 6" />
+                            </svg>
+                        </span>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm font-bold text-black-normal">Catatan berhasil disimpan</p>
+                            <p className="mt-1 text-xs leading-relaxed text-black-muted">{notification}</p>
+                        </div>
+                        <button type="button" onClick={dismissNotification} aria-label="Tutup notifikasi" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xl leading-none text-white-dark transition hover:bg-white-light-active hover:text-black-normal">×</button>
+                    </div>
+                </div>
+            )}
 
             <div className="relative overflow-hidden bg-white-light-hover px-4 pb-16 pt-28 sm:px-6 lg:px-8 lg:pb-20 lg:pt-36">
                 <div

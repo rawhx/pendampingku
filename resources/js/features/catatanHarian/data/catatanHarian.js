@@ -295,7 +295,7 @@ export function createInitialForm(student) {
         startTime: '',
         endTime: '',
         subject: '',
-        emotion: 'happy',
+        emotion: '',
         rubric: { },
         qualitative: { },
         notes: ``,

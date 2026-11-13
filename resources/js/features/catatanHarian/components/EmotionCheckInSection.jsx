@@ -1,7 +1,7 @@
 import SectionCard from './SectionCard';
 import { icons } from '../../../assets/icons/icons';
 
-export default function EmotionCheckInSection({ value, options, onChange }) {
+export default function EmotionCheckInSection({ value, options, error, onChange }) {
     return (
         <SectionCard
             index={2}
@@ -22,7 +22,7 @@ export default function EmotionCheckInSection({ value, options, onChange }) {
                                 selected
                                     ? 'bg-white shadow-[0_0_14px_rgba(0,129,242,0.4)]'
                                     : 'bg-white/10 shadow-[0_0_4px_rgba(0,0,0,0.08)] hover:bg-white/60'
-                            }`}
+                            } ${error ? 'ring-2 ring-red-normal/70' : ''}`}
                         >
                             <span className="flex w-full items-center justify-between">
                                 {option.gradient ? (
@@ -67,6 +67,7 @@ export default function EmotionCheckInSection({ value, options, onChange }) {
                     );
                 })}
             </div>
+            {error && <p className="text-xs text-red-normal">{error}</p>}
         </SectionCard>
     );
 }

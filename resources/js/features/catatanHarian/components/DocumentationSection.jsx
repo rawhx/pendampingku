@@ -7,7 +7,7 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png'];
 const MAX_FILES = 5;
 const MAX_SIZE = 5 * 1024 * 1024;
 
-export default function DocumentationSection({ files = [], onFilesChange, onRemoveFile }) {
+export default function DocumentationSection({ files = [], requiredError, onFilesChange, onRemoveFile }) {
     const inputRef = useRef(null);
     const [error, setError] = useState('');
 
@@ -71,7 +71,7 @@ export default function DocumentationSection({ files = [], onFilesChange, onRemo
                     type="button"
                     onClick={() => inputRef.current?.click()}
                     disabled={files.length >= MAX_FILES}
-                    className="flex min-h-[126px] w-full items-center justify-center gap-5 rounded-3xl bg-white px-4 py-4 text-left shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:bg-white-light-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/40 disabled:cursor-not-allowed disabled:opacity-60"
+                    className={`flex min-h-[126px] w-full items-center justify-center gap-5 rounded-3xl bg-white px-4 py-4 text-left shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:bg-white-light-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/40 disabled:cursor-not-allowed disabled:opacity-60 ${requiredError ? 'ring-2 ring-red-normal/70' : ''}`}
                 >
                     <span className="text-base text-black-normal">
                         Unggah Foto lembar kerja, hasil prakarya, atau foto
@@ -88,6 +88,7 @@ export default function DocumentationSection({ files = [], onFilesChange, onRemo
                 </button>
 
                 {error && <p className="text-xs text-red-normal">{error}</p>}
+                {requiredError && <p className="text-xs text-red-normal">{requiredError}</p>}
 
                 {files.length > 0 && (
                     <ul className="flex flex-wrap gap-3">

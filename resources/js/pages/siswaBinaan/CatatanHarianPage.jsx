@@ -1,3 +1,5 @@
+import CatatanHarianHeader from '@/features/catatanHarian/components/CatatanHarianHeader';
+import CatatanSuccessToast from '@/features/catatanHarian/components/CatatanSuccessToast';
 import DocumentationSection from '@/features/catatanHarian/components/DocumentationSection';
 import EmotionCheckInSection from '@/features/catatanHarian/components/EmotionCheckInSection';
 import FormActions from '@/features/catatanHarian/components/FormActions';
@@ -7,16 +9,12 @@ import RubricSection from '@/features/catatanHarian/components/RubricSection';
 import SessionDetailsSection from '@/features/catatanHarian/components/SessionDetailsSection';
 import StrategySection from '@/features/catatanHarian/components/StrategySection';
 import VisibilitySection from '@/features/catatanHarian/components/VisibilitySection';
-import {
-    createInitialForm,
-    emotionOptions,
-    getAiRecommendation,
-} from '@/features/catatanHarian/data/catatanHarian';
+import { emotionOptions } from '@/features/catatanHarian/data/catatanHarian';
+import useCatatanHarianForm from '@/features/catatanHarian/hooks/useCatatanHarianForm';
 import { students } from '@/features/siswaBinaan/data/students';
-import { saveStudentNote } from '@/features/siswaBinaan/data/studentMetrics';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { Head, usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
 
 export default function CatatanHarianPage() {
     const { studentId } = usePage().props;
@@ -24,252 +22,85 @@ export default function CatatanHarianPage() {
         () => students.find((item) => item.id === studentId) ?? students[0],
         [studentId],
     );
-
-    const [form, setForm] = useState(() => createInitialForm(student));
-    const [errors, setErrors] = useState({});
-    const [saved, setSaved] = useState(false);
-    const [step, setStep] = useState(1);
-    const [variantIndex, setVariantIndex] = useState(0);
-
-    const recommendation = useMemo(
-        () => getAiRecommendation(student, variantIndex),
-        [student, variantIndex],
-    );
-
-    const updateField = (field, value) => {
-        setForm((current) => ({ ...current, [field]: value }));
-        setSaved(false);
-        setErrors((current) => ({ ...current, [field]: undefined }));
-    };
-
-    const updateRubric = (itemId, value) => {
-        setForm((current) => ({
-            ...current,
-            rubric: {
-                ...current.rubric,
-                [itemId]: value,
-            },
-        }));
-        setSaved(false);
-    };
-
-    const updateQualitative = (field, value) => {
-        setForm((current) => ({
-            ...current,
-            qualitative: {
-                ...current.qualitative,
-                [field]: value,
-            },
-        }));
-        setSaved(false);
-    };
-
-    const changeVariant = () => {
-        setVariantIndex((current) => current + 1);
-        setSaved(false);
-    };
-
-    const applyIntervention = () => {
-        const narrative = recommendation
-            .map((item) => `${item.heading}: ${item.body}`)
-            .join('\n\n');
-
-        setForm((current) => ({
-            ...current,
-            notes: current.notes
-                ? `${current.notes}\n\n${narrative}`
-                : narrative,
-        }));
-        setSaved(false);
-    };
-
-    const removeFile = (file) => {
-        if (!file.isDemo && file.thumbnail?.startsWith('blob:')) {
-            URL.revokeObjectURL(file.thumbnail);
-        }
-
-        setForm((current) => ({
-            ...current,
-            files: current.files.filter((item) => item.id !== file.id),
-        }));
-        setSaved(false);
-    };
-
-    const validateSession = () => {
-        const nextErrors = {};
-
-        if (!form.date) {
-            nextErrors.date = 'Tanggal observasi wajib diisi.';
-        }
-
-        if (!form.startTime) {
-            nextErrors.startTime = 'Jam mulai wajib diisi.';
-        }
-
-        if (!form.endTime) {
-            nextErrors.endTime = 'Jam selesai wajib diisi.';
-        } else if (form.startTime && form.endTime <= form.startTime) {
-            nextErrors.endTime = 'Jam selesai harus setelah jam mulai.';
-        }
-
-        if (!form.subject?.trim()) {
-            nextErrors.subject = 'Mata pelajaran wajib diisi.';
-        }
-
-        setErrors(nextErrors);
-
-        return Object.keys(nextErrors).length === 0;
-    };
-
-    const goNext = () => {
-        if (!validateSession()) {
-            setSaved(false);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        setForm((current) => ({
-            ...current,
-            notes:
-                current.notes?.trim() || current.qualitative?.factual
-                    ? current.notes?.trim() || current.qualitative.factual
-                    : current.notes,
-        }));
-        setSaved(false);
-        setStep(2);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const goBack = () => {
-        setSaved(false);
-        setStep(1);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const saveNote = () => {
-        if (!validateSession()) {
-            setStep(1);
-            setSaved(false);
-            return;
-        }
-
-        const { files, ...persistedForm } = form;
-
-        try {
-            saveStudentNote(student.id, {
-                ...persistedForm,
-                savedAt: new Date().toISOString(),
-            });
-        } catch {
-            // Abaikan kegagalan penyimpanan lokal (mis. mode privat).
-        }
-
-        setSaved(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    const catatan = useCatatanHarianForm(student);
 
     return (
         <AuthenticatedLayout>
             <Head title="Catatan Harian" />
 
             <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 lg:px-0 lg:pb-20 lg:pt-36">
-                <Link
-                    href={route('siswa-binaan')}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-blue-normal transition hover:text-blue-normal-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2"
-                >
-                    <span aria-hidden="true">←</span>
-                    Kembali ke Siswa Binaan
-                </Link>
-
-                <div className="mb-8 mt-4">
-                    <h1 className="text-2xl font-bold leading-tight text-black-normal sm:text-3xl">
-                        Catatan Harian
-                    </h1>
-                    <p className="mt-2 text-sm text-black-muted">
-                        Buat catatan perkembangan baru untuk {student.name}.
-                    </p>
-                </div>
+                <CatatanHarianHeader studentName={student.name} />
 
                 <div className="flex flex-col gap-6">
-                    {saved && (
-                        <div
-                            role="status"
-                            aria-live="polite"
-                            className="rounded-3xl border border-green-normal bg-green-light px-4 py-3 text-base text-green-dark"
-                        >
-                            Catatan harian {student.name} berhasil disimpan.
+                    {catatan.saved && (
+                        <CatatanSuccessToast studentName={student.name} />
+                    )}
+
+                    {Object.keys(catatan.errors).length > 0 && (
+                        <div role="alert" className="rounded-2xl border border-red-normal/30 bg-red-light px-5 py-4 text-sm text-red-dark">
+                            Lengkapi semua input wajib sebelum melanjutkan atau menyimpan catatan.
                         </div>
                     )}
 
-                    {step === 1 ? (
+                    {catatan.step === 1 ? (
                         <>
                             <SessionDetailsSection
-                                date={form.date}
-                                startTime={form.startTime}
-                                endTime={form.endTime}
-                                subject={form.subject}
-                                errors={errors}
-                                onChange={updateField}
+                                date={catatan.form.date}
+                                startTime={catatan.form.startTime}
+                                endTime={catatan.form.endTime}
+                                subject={catatan.form.subject}
+                                errors={catatan.errors}
+                                onChange={catatan.updateField}
                             />
-
                             <EmotionCheckInSection
-                                value={form.emotion}
+                                value={catatan.form.emotion}
                                 options={emotionOptions}
-                                onChange={(emotion) =>
-                                    updateField('emotion', emotion)
-                                }
+                                error={catatan.errors.emotion}
+                                onChange={(emotion) => catatan.updateField('emotion', emotion)}
                             />
-
                             <RubricSection
-                                answers={form.rubric}
-                                onSelect={updateRubric}
+                                answers={catatan.form.rubric}
+                                hasError={Boolean(catatan.errors.rubric)}
+                                onSelect={catatan.updateRubric}
                             />
-
                             <QualitativeSection
-                                values={form.qualitative}
-                                onChange={updateQualitative}
+                                values={catatan.form.qualitative}
+                                errors={catatan.errors}
+                                onChange={catatan.updateQualitative}
                             />
-
-                            <FormActions step={1} onNext={goNext} />
+                            <FormActions step={1} onNext={catatan.goNext} />
                         </>
                     ) : (
                         <>
                             <ObservationNotesSection
-                                notes={form.notes}
-                                onNotesChange={(notes) =>
-                                    updateField('notes', notes)
-                                }
-                                recommendation={recommendation}
-                                onApplyIntervention={applyIntervention}
-                                onVariantChange={changeVariant}
+                                notes={catatan.form.notes}
+                                error={catatan.errors.notes}
+                                onNotesChange={(notes) => catatan.updateField('notes', notes)}
+                                recommendation={catatan.recommendation}
+                                onApplyIntervention={catatan.applyIntervention}
+                                onVariantChange={catatan.changeVariant}
                             />
-
                             <StrategySection
-                                value={form.strategy}
-                                onChange={(strategy) =>
-                                    updateField('strategy', strategy)
-                                }
+                                value={catatan.form.strategy}
+                                error={catatan.errors.strategy}
+                                onChange={(strategy) => catatan.updateField('strategy', strategy)}
                             />
-
                             <DocumentationSection
-                                files={form.files}
-                                onFilesChange={(files) =>
-                                    updateField('files', files)
-                                }
-                                onRemoveFile={removeFile}
+                                files={catatan.form.files}
+                                requiredError={catatan.errors.files}
+                                onFilesChange={(files) => catatan.updateField('files', files)}
+                                onRemoveFile={catatan.removeFile}
                             />
-
                             <VisibilitySection
                                 student={student}
-                                parentReport={form.parentReport}
-                                discussTeacher={form.discussTeacher}
-                                onChange={updateField}
+                                parentReport={catatan.form.parentReport}
+                                discussTeacher={catatan.form.discussTeacher}
+                                onChange={catatan.updateField}
                             />
-
                             <FormActions
                                 step={2}
-                                onBack={goBack}
-                                onSave={saveNote}
+                                onBack={catatan.goBack}
+                                onSave={catatan.saveNote}
                             />
                         </>
                     )}
