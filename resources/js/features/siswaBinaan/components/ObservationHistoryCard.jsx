@@ -32,10 +32,17 @@ export default function ObservationHistoryCard({ note, student }) {
             <p className="line-clamp-2 text-base leading-[21px] text-black-normal">{summary}</p>
 
             <div className="flex justify-end">
-                <button type="button" className="gradient-primary flex h-12 w-[204px] items-center justify-center rounded-[28px] text-base font-semibold text-white shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2">
+                <Link
+                    href={route('siswa-binaan.laporan.catatan', {
+                        student: student.id,
+                        observation: note.id,
+                    })}
+                    className="gradient-primary flex h-12 w-[204px] items-center justify-center rounded-[28px] text-base font-semibold text-white shadow-[0_0_2px_rgba(0,0,0,0.08)] transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2"
+                >
                     Selengkapnya
-                </button>
+                </Link>
             </div>
         </article>
     );
 }
+import { Link } from '@inertiajs/react';

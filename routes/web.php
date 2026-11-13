@@ -39,6 +39,13 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('siswa-binaan.laporan');
 
+    Route::get('/siswa-binaan/{student}/laporan/catatan/{observation}', function (string $student, string $observation) {
+        return Inertia::render('siswaBinaan/ObservationDetailPage', [
+            'studentId' => $student,
+            'observationId' => $observation,
+        ]);
+    })->name('siswa-binaan.laporan.catatan');
+
     Route::get('/siswa-binaan/{student}/catatan-harian', function (string $student) {
         return Inertia::render('siswaBinaan/CatatanHarianPage', [
             'studentId' => $student,
