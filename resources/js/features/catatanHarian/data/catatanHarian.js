@@ -39,193 +39,193 @@ export const rubricScale = [
 export const rubricCategories = [
     {
         id: 'A',
-        title: 'Regulasi Emosi',
+        title: 'Emotional Regulation',
         description:
-            'Kemampuan mengenali, mengekspresikan, dan menenangkan respon emosi',
+            'Kemampuan siswa mengenali, mengekspresikan, dan mengelola emosi serta menyesuaikan diri terhadap perubahan.',
         items: [
             {
-                id: 'a1',
-                title: 'Mengenal Emosi Diri',
+                id: 'ER01',
+                title: 'Pengenalan Emosi',
                 description:
-                    'Mampu mengidentifikasi apa yang sedang dirasakan (senang, cemas, frustrasi).',
+                    'Kemampuan siswa mengenali atau menunjukkan kondisi emosional yang sedang dialami melalui ucapan, ekspresi, gestur, atau media komunikasi alternatif.',
             },
             {
-                id: 'a2',
-                title: 'Mengekspresikan Emosi Secara Adaptif',
+                id: 'ER02',
+                title: 'Ekspresi Emosi',
                 description:
-                    'Menyampaikan ketidaknyamanan tanpa perilaku agresif atau melukai diri.',
+                    'Kemampuan siswa menyampaikan perasaan, kebutuhan emosional, atau ketidaknyamanan dengan cara yang dapat dipahami orang lain.',
             },
             {
-                id: 'a3',
-                title: 'Mengelola Emosi / Regulasi Diri (Coping)',
+                id: 'ER03',
+                title: 'Pengelolaan Emosi',
                 description:
-                    'Menggunakan strategi sensorik/nafas dalam ketika mengalami sensory overload.',
+                    'Kemampuan siswa menggunakan strategi yang sesuai untuk mengelola respons emosional ketika menghadapi frustrasi, kecewa, takut, atau marah.',
             },
             {
-                id: 'a4',
-                title: 'Menyesuaikan Diri dengan Perubahan Jadwal / Rutinitas',
+                id: 'ER04',
+                title: 'Adaptasi terhadap Perubahan',
                 description:
-                    'Menerima pergantian mata pelajaran atau guru tanpa kecemasan ekstrem.',
+                    'Kemampuan siswa menyesuaikan diri terhadap perubahan aktivitas, rutinitas, lingkungan, atau situasi yang tidak terduga.',
             },
         ],
     },
     {
         id: 'B',
-        title: 'Regulasi Perilaku',
+        title: 'Behavioral Regulation',
         description:
-            'Kepatuhan instruksi, atensi kerja, dan pengelolaan gerak motorik di kelas',
+            'Kemampuan siswa mengikuti instruksi, mematuhi aturan, mempertahankan keterlibatan, dan bertransisi antaraktivitas.',
         items: [
             {
-                id: 'b1',
-                title: 'Mengikuti Instruksi Guru Kelas',
+                id: 'BR01',
+                title: 'Mengikuti Instruksi',
                 description:
-                    'Merespons instruksi klasikal yang diberikan guru wali kelas di depan.',
+                    'Kemampuan siswa memahami dan melaksanakan instruksi yang diberikan sesuai tingkat pemahaman dan kemampuannya.',
             },
             {
-                id: 'b2',
-                title: 'Mematuhi Aturan dan Kesepakatan Kelas',
+                id: 'BR02',
+                title: 'Mengikuti Aturan dan Kesepakatan',
                 description:
-                    'Duduk tenang, menunggu giliran bicara, dan menjaga batasan personal teman.',
+                    'Kemampuan siswa memahami serta mengikuti aturan atau kesepakatan dalam kegiatan pembelajaran dan lingkungan sekolah.',
             },
             {
-                id: 'b3',
-                title: 'Mempertahankan Atensi pada Aktivitas',
+                id: 'BR03',
+                title: 'Mempertahankan Keterlibatan Aktivitas',
                 description:
-                    'Fokus pada lembar tugas sekurang-kurangnya 15–20 menit terarah.',
+                    'Kemampuan siswa mempertahankan perhatian dan keterlibatan dalam suatu aktivitas sesuai target individual.',
             },
             {
-                id: 'b4',
-                title: 'Transisi Antar Aktivitas Pembelajaran',
+                id: 'BR04',
+                title: 'Transisi Aktivitas',
                 description:
-                    'Beralih dari sesi penjelasan klasikal ke penugasan lembar kerja mandiri.',
+                    'Kemampuan siswa berpindah dari satu kegiatan ke kegiatan lain dengan tingkat bantuan tertentu.',
             },
         ],
     },
     {
         id: 'C',
-        title: 'Kemandirian',
+        title: 'Independence',
         description:
-            'Menyiapkan alat belajar, aktivitas tanpa pengingat konstan, toilet & makan',
+            'Kemampuan siswa mengelola kebutuhan pribadi, melaksanakan aktivitas secara mandiri, dan menunjukkan inisiatif.',
         items: [
             {
-                id: 'c1',
-                title: 'Menyiapkan Alat Belajar Sendiri',
+                id: 'IN01',
+                title: 'Persiapan Kebutuhan Pribadi',
                 description:
-                    'Menyiapkan buku, alat tulis, dan perlengkapan sesi tanpa diingatkan guru.',
+                    'Kemampuan siswa menyiapkan, menggunakan, dan mengelola perlengkapan pribadi atau belajar sesuai kebutuhannya.',
             },
             {
-                id: 'c2',
-                title: 'Menjalankan Rutinitas Kelas Mandiri',
+                id: 'IN02',
+                title: 'Pelaksanaan Aktivitas Mandiri',
                 description:
-                    'Merapikan meja dan mengumpulkan tugas sesuai prosedur kelas.',
+                    'Kemampuan siswa memulai dan menyelesaikan aktivitas yang menjadi tanggung jawabnya.',
             },
             {
-                id: 'c3',
-                title: 'Kemandirian Toilet & Makan',
+                id: 'IN03',
+                title: 'Pengelolaan Kebutuhan Diri',
                 description:
-                    'Pergi ke toilet dan makan sendiri sesuai jadwal tanpa pendampingan penuh.',
+                    'Kemampuan siswa melakukan aktivitas perawatan diri sesuai usia, kondisi, dan target individual.',
             },
             {
-                id: 'c4',
-                title: 'Mengelola Waktu Belajar',
+                id: 'IN04',
+                title: 'Inisiatif dan Meminta Bantuan',
                 description:
-                    'Beralih ke tugas berikutnya saat waktu yang ditentukan habis.',
+                    'Kemampuan siswa memulai tindakan secara mandiri serta mengidentifikasi kapan bantuan orang lain diperlukan.',
             },
         ],
     },
     {
         id: 'D',
-        title: 'Komunikasi',
+        title: 'Communication',
         description:
-            'Menyatakan kebutuhan jelas, percakapan dua arah, merespons ajakan verbal',
+            'Kemampuan siswa menyampaikan kebutuhan, memahami informasi, memberikan respons, dan mengungkapkan pendapat.',
         items: [
             {
-                id: 'd1',
-                title: 'Menyatakan Kebutuhan Secara Jelas',
+                id: 'CO01',
+                title: 'Menyampaikan Kebutuhan',
                 description:
-                    'Mengungkapkan kebutuhan atau keinginan dengan kalimat yang dapat dipahami.',
+                    'Kemampuan siswa mengomunikasikan kebutuhan, keinginan, atau ketidaknyamanan menggunakan metode komunikasi yang dimiliki.',
             },
             {
-                id: 'd2',
-                title: 'Percakapan Dua Arah',
+                id: 'CO02',
+                title: 'Memahami Informasi',
                 description:
-                    'Mendengarkan lawan bicara dan merespons sesuai topik.',
+                    'Kemampuan siswa menerima dan memahami informasi, instruksi, atau pesan dari orang lain.',
             },
             {
-                id: 'd3',
-                title: 'Merespons Ajakan Verbal',
+                id: 'CO03',
+                title: 'Memberikan Respons Komunikasi',
                 description:
-                    'Menjawab ajakan atau pertanyaan guru dan teman secara verbal.',
+                    'Kemampuan siswa memberikan respons yang relevan terhadap pertanyaan, pernyataan, atau ajakan komunikasi.',
             },
             {
-                id: 'd4',
-                title: 'Menggunakan Bahasa Sesuai Konteks',
+                id: 'CO04',
+                title: 'Mengungkapkan Pendapat dan Informasi',
                 description:
-                    'Memilih kata dan nada yang sopan sesuai situasi kelas.',
+                    'Kemampuan siswa menyampaikan gagasan, pengalaman, pilihan, atau informasi kepada orang lain.',
             },
         ],
     },
     {
         id: 'E',
-        title: 'Interaksi Sosial',
+        title: 'Social Interaction',
         description:
-            'Partisipasi kerja kelompok, giliran bicara (turn-taking), inisiasi interaksi kawan',
+            'Kemampuan siswa memulai, merespons, dan mempertahankan interaksi sosial serta berpartisipasi dalam aktivitas bersama.',
         items: [
             {
-                id: 'e1',
-                title: 'Partisipasi Kerja Kelompok',
+                id: 'SI01',
+                title: 'Memulai Interaksi Sosial',
                 description:
-                    'Mengambil peran aktif saat tugas kelompok berlangsung.',
+                    'Kemampuan siswa menunjukkan inisiatif untuk memulai interaksi dengan teman, guru, atau orang lain.',
             },
             {
-                id: 'e2',
-                title: 'Menunggu Giliran Bicara',
+                id: 'SI02',
+                title: 'Merespons Interaksi Sosial',
                 description:
-                    'Memberi kesempatan teman berbicara sebelum menyampaikan pendapat.',
+                    'Kemampuan siswa memberikan respons terhadap sapaan, ajakan, atau interaksi yang dimulai orang lain.',
             },
             {
-                id: 'e3',
-                title: 'Inisiasi Interaksi dengan Teman',
+                id: 'SI03',
+                title: 'Partisipasi Aktivitas Sosial',
                 description:
-                    'Menyapa atau mengajak teman bermain/berdiskusi lebih dulu.',
+                    'Kemampuan siswa berpartisipasi dalam kegiatan bersama atau kelompok sesuai kemampuan dan preferensinya.',
             },
             {
-                id: 'e4',
-                title: 'Menjaga Batasan Personal',
+                id: 'SI04',
+                title: 'Interaksi Timbal Balik',
                 description:
-                    'Menghormati ruang pribadi dan berbagi alat dengan teman.',
+                    'Kemampuan siswa mempertahankan interaksi dua arah, seperti bergiliran, berbagi peran, dan memberikan respons secara bergantian.',
             },
         ],
     },
     {
         id: 'F',
-        title: 'Perkembangan Akademik',
+        title: 'Academic Development',
         description:
-            'Pemahaman lembar kerja tematik, target durasi pengerjaan, penerapan materi baru',
+            'Kemampuan siswa memahami materi, mengikuti instruksi akademik, menyelesaikan tugas, dan menerapkan pengetahuan.',
         items: [
             {
-                id: 'f1',
-                title: 'Memahami Lembar Kerja Tematik',
+                id: 'AC01',
+                title: 'Pemahaman Materi',
                 description:
-                    'Membaca dan memahami instruksi tugas tematik dengan benar.',
+                    'Kemampuan siswa memahami konsep atau materi pembelajaran sesuai target akademik individual.',
             },
             {
-                id: 'f2',
-                title: 'Mencapai Target Durasi',
+                id: 'AC02',
+                title: 'Pemahaman Instruksi Akademik',
                 description:
-                    'Menyelesaikan tugas dalam rentang waktu yang ditetapkan.',
+                    'Kemampuan siswa memahami petunjuk dan tahapan pengerjaan tugas akademik.',
             },
             {
-                id: 'f3',
-                title: 'Menerapkan Materi Baru',
+                id: 'AC03',
+                title: 'Penyelesaian Tugas Akademik',
                 description:
-                    'Menggunakan konsep yang baru dipelajari pada tugas berikutnya.',
+                    'Kemampuan siswa menyelesaikan tugas sesuai tingkat kemampuan dan target pembelajaran individual.',
             },
             {
-                id: 'f4',
-                title: 'Peningkatan Hasil Belajar',
+                id: 'AC04',
+                title: 'Penerapan Pengetahuan',
                 description:
-                    'Menunjukkan kemajuan dibanding sesi sebelumnya.',
+                    'Kemampuan siswa menerapkan pengetahuan atau keterampilan yang telah dipelajari dalam aktivitas atau situasi yang relevan.',
             },
         ],
     },
