@@ -32,6 +32,12 @@ Route::get('/siswa-binaan/{student}/edit', function (string $student) {
     ]);
 })->name('siswa-binaan.edit');
 
+Route::get('/siswa-binaan/{student}/laporan', function (string $student) {
+    return Inertia::render('siswaBinaan/LaporanSiswaPage', [
+        'studentId' => $student,
+    ]);
+})->name('siswa-binaan.laporan');
+
 Route::get('/siswa-binaan/{student}/catatan-harian', function (string $student) {
     return Inertia::render('siswaBinaan/CatatanHarianPage', [
         'studentId' => $student,
