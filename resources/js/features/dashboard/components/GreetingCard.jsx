@@ -33,7 +33,7 @@ export default function GreetingCard({ greeting, user }) {
                 </span>
 
                 <div className="flex min-w-0 flex-col gap-2">
-                    <h1 className="text-2xl font-semibold leading-tight text-blue-normal sm:text-[28px] xl:text-[32px]">
+                    <h1 className="text-2xl font-semibold leading-tight text-blue-normal sm:text-[28px] xl:text-3xl">
                         {greetingText}
                     </h1>
                     <p className="max-w-3xl text-sm leading-relaxed text-black-normal sm:text-base">

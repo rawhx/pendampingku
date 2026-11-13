@@ -32,7 +32,7 @@ export default function DashboardPage() {
                     <div className="absolute right-[-269px] top-[71px] h-[335px] w-[335px] rounded-full bg-blue-normal/50 blur-[50px]" />
                 </div>
 
-                <div className="relative mx-auto w-full max-w-[1080px] px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32 xl:pt-40">
+                <div className="relative mx-auto w-full max-w-7xl px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32 xl:pt-40">
                     <GreetingCard greeting={greeting} user={auth?.user} />
 
                     <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-10 xl:grid-cols-4 xl:gap-8">
@@ -43,9 +43,9 @@ export default function DashboardPage() {
                 </div>
 
                 <section className="relative mt-8 bg-blue-light py-10 lg:mt-10 lg:py-12 xl:py-[60px]">
-                    <div className="mx-auto w-full max-w-[1080px] px-4 sm:px-6 lg:px-0">
+                    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-0">
                         <div className="flex flex-col gap-2">
-                            <h2 className="text-2xl font-semibold leading-tight text-black-normal lg:text-[32px]">
+                            <h2 className="text-2xl font-semibold text-black-normal lg:3xl">
                                 SISWA BINAAN AKTIF
                             </h2>
                             <p className="text-sm text-black-normal/80 lg:text-base">
@@ -64,7 +64,7 @@ export default function DashboardPage() {
                     </div>
                 </section>
 
-                <div className="relative mx-auto mt-10 w-full max-w-[1080px] px-4 pb-16 sm:px-6 lg:mt-12 lg:px-0 lg:pb-20">
+                <div className="relative mx-auto mt-10 w-full max-w-7xl px-4 pb-16 sm:px-6 lg:mt-12 lg:px-0 lg:pb-20">
                     <div className="grid gap-6 lg:grid-cols-[minmax(0,451px)_minmax(0,1fr)] lg:items-start lg:gap-6">
                         <ActivityFeed items={activities} />
                         <ScheduleList items={schedule} />

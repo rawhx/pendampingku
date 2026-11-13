@@ -1,5 +1,4 @@
 import SectionCard from './SectionCard';
-import { icons } from '../../../assets/icons/icons';
 
 const fieldClass =
     'h-12 w-full rounded-4xl border-0 bg-white pl-3 text-base text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)] outline-none transition focus:ring-2 focus:ring-blue-normal/20';
@@ -16,8 +15,7 @@ export default function SessionDetailsSection({
     date,
     startTime,
     endTime,
-    activity,
-    activityOptions,
+    subject,
     errors = {},
     onChange,
 }) {
@@ -27,13 +25,13 @@ export default function SessionDetailsSection({
             title="Mendata Sesi Observasi"
             badge="Wajib Diisi"
         >
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex w-full flex-col gap-2 lg:w-1/5">
                     <label
                         htmlFor="observation-date"
                         className="text-base font-medium text-black-normal"
                     >
-                        Data Observasi
+                        Tanggal Observasi
                     </label>
                     <div className="relative">
                         <input
@@ -45,18 +43,17 @@ export default function SessionDetailsSection({
                             }
                             aria-invalid={Boolean(errors.date)}
                             className={`${fieldClass}`}
-                            
                         />
                     </div>
                     <FieldError message={errors.date} />
                 </div>
 
-                <div className="flex w-full lg:w-fit flex-col gap-2">
+                <div className="flex w-full flex-col gap-2 lg:w-fit">
                     <span className="text-base font-medium text-black-normal">
                         Rentang Jam Observasi
                     </span>
                     <div className="flex items-center gap-2">
-                        <div className="relative min-w-0 flex">
+                        <div className="relative flex min-w-0">
                             <label htmlFor="start-time" className="sr-only">
                                 Jam mulai observasi
                             </label>
@@ -71,7 +68,7 @@ export default function SessionDetailsSection({
                                 className={`${fieldClass}`}
                             />
                         </div>
-                        <div className="relative min-w-0 flex">
+                        <div className="relative flex min-w-0">
                             <label htmlFor="end-time" className="sr-only">
                                 Jam selesai observasi
                             </label>
@@ -92,35 +89,25 @@ export default function SessionDetailsSection({
 
                 <div className="flex w-full flex-col gap-2 lg:w-[308px]">
                     <label
-                        htmlFor="activity"
+                        htmlFor="subject"
                         className="text-base font-medium text-black-normal"
                     >
-                        Konteks / Jenis Kegiatan
+                        Mata Pelajaran
                     </label>
                     <div className="relative">
-                        <select
-                            id="activity"
-                            value={activity}
+                        <input
+                            id="subject"
+                            type="text"
+                            value={subject}
+                            placeholder="Tulis mata pelajaran.."
                             onChange={(event) =>
-                                onChange('activity', event.target.value)
+                                onChange('subject', event.target.value)
                             }
-                            aria-invalid={Boolean(errors.activity)}
-                            className={`${fieldClass} appearance-none pr-11`}
-                        >
-                            {activityOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </select>
-                        {/* <img
-                            src={icons.chevronDown}
-                            alt=""
-                            aria-hidden="true"
-                            className="pointer-events-none absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2"
-                        /> */}
+                            aria-invalid={Boolean(errors.subject)}
+                            className={`${fieldClass} pr-11`}
+                        />
                     </div>
-                    <FieldError message={errors.activity} />
+                    <FieldError message={errors.subject} />
                 </div>
             </div>
         </SectionCard>

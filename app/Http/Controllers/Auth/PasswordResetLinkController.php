@@ -41,11 +41,15 @@ class PasswordResetLinkController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+            return back()->with('status', 'Tautan reset kata sandi telah dikirim ke email Anda.');
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'email' => [match ($status) {
+                Password::INVALID_USER => 'Email tidak terdaftar.',
+                Password::RESET_THROTTLED => 'Terlalu banyak permintaan reset. Silakan coba lagi beberapa saat lagi.',
+                default => 'Gagal mengirim tautan reset kata sandi.',
+            }],
         ]);
     }
 }

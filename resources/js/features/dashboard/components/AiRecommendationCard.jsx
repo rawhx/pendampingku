@@ -8,7 +8,7 @@ export default function AiRecommendationCard({
     secondaryAction,
 }) {
     return (
-        <article className="mt-8 rounded-3xl bg-white/50 px-5 py-5 shadow-[0_0_28px_rgba(0,129,242,0.08)] sm:px-7 lg:mt-[34px]">
+        <article className="mt-8 rounded-3xl bg-white p-5 shadow-[0_0_28px_rgba(0,129,242,0.08)] sm:px-7 lg:mt-[34px]">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="text-lg font-semibold leading-tight text-blue-normal lg:text-xl">
                     Rekomendasi AI Pendamping

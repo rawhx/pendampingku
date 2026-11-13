@@ -6,6 +6,7 @@ export default function AuthShell({
     heading,
     description,
     status,
+    error,
     children,
 }) {
     return (
@@ -46,6 +47,15 @@ export default function AuthShell({
                 {status && (
                     <div className="mt-4 rounded-xl bg-green-light p-3 text-sm font-medium text-green-dark border border-green-light-active">
                         {status}
+                    </div>
+                )}
+
+                {error && (
+                    <div
+                        role="alert"
+                        className="mt-4 rounded-xl border border-red-light-active bg-red-light p-3 text-sm font-medium text-red-dark"
+                    >
+                        {error}
                     </div>
                 )}
 
