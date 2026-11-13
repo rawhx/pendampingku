@@ -1,4 +1,4 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import AuthField from '@/features/auth/form/AuthField';
 import AuthSubmitButton from '@/features/auth/form/AuthSubmitButton';
 import AuthLayout from '@/features/auth/layout/AuthLayout';
@@ -14,6 +14,7 @@ export default function Login({ status, canResetPassword }) {
         password: '',
         remember: false,
     });
+    const { errors: pageErrors } = usePage().props;
 
     const submit = (e) => {
         e.preventDefault();
@@ -29,11 +30,12 @@ export default function Login({ status, canResetPassword }) {
             heading={`Masuk ke ${appName}`}
             description="Masuk ke akun Pendampingku untuk melanjutkan pencatatan dan monitoring"
             status={status}
+            error={pageErrors?.google}
         >
             <GoogleButton
                 label="Masuk dengan Google"
                 onClick={() => {
-                    // oauth login with Google
+                    window.location.assign(route('auth.google.redirect'));
                 }}
                 className="mt-6"
             />

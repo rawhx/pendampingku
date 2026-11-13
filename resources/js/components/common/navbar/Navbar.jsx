@@ -77,6 +77,7 @@ export default function Navbar({ isLanding = false, isDashboard = false, canLogi
                         showAuth={isLanding}
                         canLogin={canLogin}
                         canRegister={canRegister}
+                        user={auth?.user}
                     />
                 )}
             </div>

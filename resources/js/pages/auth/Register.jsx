@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import AuthField from '@/features/auth/form/AuthField';
 import AuthSubmitButton from '@/features/auth/form/AuthSubmitButton';
 import AuthLayout from '@/features/auth/layout/AuthLayout';
@@ -14,6 +14,7 @@ export default function Register() {
         password: '',
         password_confirmation: '',
     });
+    const { errors: pageErrors } = usePage().props;
 
     const submit = (e) => {
         e.preventDefault();
@@ -28,11 +29,12 @@ export default function Register() {
             title="Daftar"
             heading="Buat Akun"
             description="Daftar akun Pendampingku untuk mulai mencatat dan memantau perkembangan"
+            error={pageErrors?.google}
         >
             <GoogleButton
                 label="Daftar dengan Google"
                 onClick={() => {
-                    // oauth register with Google
+                    window.location.assign(route('auth.google.redirect'));
                 }}
                 className="mt-6"
             />

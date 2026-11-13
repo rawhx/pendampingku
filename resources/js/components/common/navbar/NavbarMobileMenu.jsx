@@ -31,6 +31,7 @@ export default function NavbarMobileMenu({
     showAuth = false,
     canLogin,
     canRegister,
+    user = null,
 }) {
     return (
         <div className="lg:hidden border-t border-white/20">
@@ -46,6 +47,37 @@ export default function NavbarMobileMenu({
                     onBlue={onBlue}
                     onNavigate={onClose}
                 />
+
+                {user && (
+                    <div className="pt-3 space-y-1 border-t border-white/20">
+                        <div className="px-4 pb-1">
+                            <p className="truncate text-sm font-semibold text-black-normal">
+                                {user.name}
+                            </p>
+                            <p className="truncate text-xs text-black-muted">
+                                {user.email}
+                            </p>
+                        </div>
+
+                        <Link
+                            href={route('profile.edit')}
+                            onClick={onClose}
+                            className="block w-full rounded-lg px-4 py-2 text-sm font-medium text-black-normal transition-colors hover:bg-blue-light hover:text-blue-normal"
+                        >
+                            Profil Saya
+                        </Link>
+
+                        <Link
+                            href={route('logout')}
+                            method="post"
+                            as="button"
+                            onClick={onClose}
+                            className="block w-full rounded-lg px-4 py-2 text-center text-sm font-medium text-red-normal transition-colors hover:bg-red-light"
+                        >
+                            Keluar
+                        </Link>
+                    </div>
+                )}
 
                 {showAuth && (
                     <div className="pt-3 space-y-2 border-t border-white/20">
