@@ -132,6 +132,7 @@ export default function CatatanHarianPage() {
                                 step={2}
                                 onBack={catatan.goBack}
                                 onSave={catatan.saveNote}
+                                isSaving={catatan.isSaving}
                             />
                         </>
                     )}

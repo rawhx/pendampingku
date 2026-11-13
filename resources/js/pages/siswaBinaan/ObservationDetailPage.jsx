@@ -95,10 +95,18 @@ export default function ObservationDetailPage() {
                     </DetailSection>
 
                     <DetailSection title="Skor & Insight AI per Matriks">
+                        <div className="rounded-2xl border-l-4 border-blue-normal bg-blue-light px-4 py-3 text-sm text-black-normal">
+                            <strong className="text-blue-normal">Insight keseluruhan:</strong>{' '}
+                            {observation.analysis_ai?.overall_insight || 'Belum tersedia'}
+                        </div>
                         <div className="grid gap-4 md:grid-cols-2">
                             {rubricCategories.map((category) => (
                                 <div key={category.id} className="flex flex-col gap-3 rounded-2xl bg-white-light-active p-4">
                                     <h3 className="text-base font-bold text-black-normal">{category.id}. {category.title}</h3>
+                                    <p className="text-sm text-black-muted">
+                                        <strong className="text-blue-normal">Insight matriks:</strong>{' '}
+                                        {observation.analysis_ai?.matrix_insights?.[category.id] || 'Belum tersedia'}
+                                    </p>
                                     {category.items.map((item) => {
                                         const rubric = observation.rubrics?.find((value) => value.rubric_code === item.id);
 

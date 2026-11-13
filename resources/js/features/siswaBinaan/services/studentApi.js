@@ -73,6 +73,22 @@ export async function getStudentObservation(studentId, observationId) {
     return response.data.data;
 }
 
+export async function downloadStudentObservationPdf(studentId, observationId) {
+    const response = await axios.get(
+        `/api/students/${studentId}/observations/${observationId}/pdf`,
+        { responseType: 'blob' },
+    );
+    const url = URL.createObjectURL(response.data);
+    const anchor = document.createElement('a');
+
+    anchor.href = url;
+    anchor.download = `catatan-${studentId}-${observationId}.pdf`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+}
+
 export async function createStudentObservation(studentId, payload) {
     const formData = new FormData();
 

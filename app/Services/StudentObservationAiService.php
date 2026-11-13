@@ -12,58 +12,186 @@ use Throwable;
 class StudentObservationAiService
 {
     /**
+     * @var array<string, string>
+     */
+    private const MATRIX_NAMES = [
+        'A' => 'Regulasi Emosi',
+        'B' => 'Regulasi Perilaku',
+        'C' => 'Kemandirian',
+        'D' => 'Komunikasi',
+        'E' => 'Interaksi Sosial',
+        'F' => 'Perkembangan Akademik',
+    ];
+
+    /**
      * @param  array<string, string>  $rubric
      * @param  array<string, string>  $qualitative
-     * @return array<string, array{aspect_code: string, insight: string, recommendation: string}>
+     * @param  array<string, mixed>  $session
+     * @return array{rubrics: array<string, array{aspect_code: string, insight: string, recommendation: string}>, matrix_insights: array<string, string>, overall_insight: string}
      */
     public function generateRubricInsights(
         string $fieldNotes,
         string $studentName,
         array $rubric,
         array $qualitative,
+        array $session = [],
     ): array {
         $rubricCodes = array_keys($rubric);
 
         $codesJson = $this->encode($rubricCodes);
         $rubricJson = $this->encode($rubric);
         $qualitativeJson = $this->encode($qualitative);
+        $sessionJson = $this->encode($session);
+        $matrixNames = $this->encode([
+            'A' => 'Regulasi Emosi',
+            'B' => 'Regulasi Perilaku',
+            'C' => 'Kemandirian',
+            'D' => 'Komunikasi',
+            'E' => 'Interaksi Sosial',
+            'F' => 'Perkembangan Akademik',
+        ]);
 
         $prompt = <<<PROMPT
 Anda adalah asisten analisis pendidikan inklusif.
-Analisis setiap rubric berikut berdasarkan catatan observasi siswa.
+Analisis nilai setiap rubric berikut berdasarkan level bantuan yang dibutuhkan siswa.
+Makna skor wajib digunakan: 4 = Mandiri tanpa prompt; 3 = Bantuan Minimal berupa prompt gestur/verbal;
+2 = Bantuan Sedang berupa modeling dan verbal; 1 = Bantuan Maksimal berupa bimbingan fisik penuh;
+0 = Belum Tercapai, menolak atau menunjukkan resistensi.
+Skor lebih tinggi berarti kemandirian lebih tinggi dan kebutuhan bantuan lebih rendah.
 Jangan membuat diagnosis atau mengarang fakta. Gunakan hanya data yang tersedia.
-Untuk setiap kode rubric, buat insight singkat berbasis bukti dan satu rekomendasi praktis.
+Untuk setiap rubric, buat insight singkat berbasis skor dan data observasi serta satu rekomendasi praktis.
+Kelompokkan hasil menjadi insight singkat untuk setiap matriks berdasarkan nama matriks,
+serta satu insight keseluruhan catatan. Nilai N/O atau "no" berarti tidak diamati dan
+tidak boleh dianggap sebagai skor 0.
 Kembalikan JSON valid saja dengan format:
-{"rubrics":{"ER01":{"insight":"...","recommendation":"..."},"BR01":{"insight":"...","recommendation":"..."}}}
+{"rubrics":{"ER01":{"insight":"...","recommendation":"..."},"BR01":{"insight":"...","recommendation":"..."}},
+"matrix_insights":{"A":"...","B":"...","C":"...","D":"...","E":"...","F":"..."},
+"overall_insight":"..."}
 Nama siswa: {$studentName}
 Kode rubric: {$codesJson}
 Nilai rubric: {$rubricJson}
+Nama matriks: {$matrixNames}
 Catatan kualitatif: {$qualitativeJson}
 Catatan lapangan: {$fieldNotes}
+Data sesi lainnya: {$sessionJson}
 PROMPT;
 
         $content = $this->requestStructured($prompt);
 
         $decoded = json_decode($content, true);
         $insights = $decoded['rubrics'] ?? null;
+        $matrixInsights = $decoded['matrix_insights'] ?? null;
+        $overallInsight = $decoded['overall_insight'] ?? null;
 
-        if (! is_array($insights)) {
+        if (! is_array($insights) || ! is_array($matrixInsights) || ! is_string($overallInsight)) {
             throw new RuntimeException('Respons AI insight rubric tidak valid.');
         }
 
-        return collect($rubricCodes)->mapWithKeys(function (string $code) use ($insights): array {
-            $item = $insights[$code] ?? null;
+        return [
+            'rubrics' => collect($rubricCodes)->mapWithKeys(function (string $code) use ($insights): array {
+                $item = $insights[$code] ?? null;
 
-            if (! is_array($item) || ! isset($item['insight'], $item['recommendation'])) {
-                throw new RuntimeException("Insight AI untuk rubric {$code} tidak lengkap.");
+                if (! is_array($item) || ! isset($item['insight'], $item['recommendation'])) {
+                    throw new RuntimeException("Insight AI untuk rubric {$code} tidak lengkap.");
+                }
+
+                return [$code => [
+                    'aspect_code' => substr($code, 0, 2),
+                    'insight' => (string) $item['insight'],
+                    'recommendation' => (string) $item['recommendation'],
+                ]];
+            })->all(),
+            'matrix_insights' => collect(range('A', 'F'))->mapWithKeys(function (string $aspect) use ($matrixInsights): array {
+                if (! isset($matrixInsights[$aspect]) || ! is_string($matrixInsights[$aspect])) {
+                    throw new RuntimeException("Insight AI untuk matriks {$aspect} tidak lengkap.");
+                }
+
+                return [$aspect => $matrixInsights[$aspect]];
+            })->all(),
+            'overall_insight' => $overallInsight,
+        ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $observations
+     * @return array{insight_student_ai: string, analisis_capaian: array<string, array{matrix: string, total_score: int, max_score: int, percent: int, insight: string}>}
+     */
+    public function generateStudentAnalysis(string $studentName, array $observations): array
+    {
+        $prefixToMatrix = [
+            'ER' => 'A',
+            'BR' => 'B',
+            'IN' => 'C',
+            'CO' => 'D',
+            'SI' => 'E',
+            'AC' => 'F',
+        ];
+        $scores = collect(array_keys(self::MATRIX_NAMES))->mapWithKeys(fn (string $matrix) => [
+            $matrix => ['total_score' => 0, 'max_score' => 0, 'scores_count' => 0],
+        ])->all();
+
+        foreach ($observations as $observation) {
+            foreach ($observation['rubrics'] ?? [] as $rubric) {
+                $matrix = $prefixToMatrix[substr((string) ($rubric['rubric_code'] ?? ''), 0, 2)] ?? null;
+                $score = filter_var($rubric['score'] ?? null, FILTER_VALIDATE_INT);
+
+                if ($matrix === null || $score === false || $score < 0 || $score > 4) {
+                    continue;
+                }
+
+                $scores[$matrix]['total_score'] += $score;
+                $scores[$matrix]['max_score'] += 4;
+                $scores[$matrix]['scores_count']++;
+            }
+        }
+
+        $prompt = <<<PROMPT
+Anda adalah analis pendidikan inklusif.
+Analisis seluruh histori observasi dan seluruh nilai rubric siswa berikut.
+Makna skor: 4 mandiri tanpa prompt, 3 bantuan minimal, 2 bantuan sedang,
+1 bantuan maksimal, 0 belum tercapai. N/O atau "no" tidak dihitung sebagai 0.
+Jangan mendiagnosis atau mengarang fakta. Gunakan hanya data yang tersedia.
+Buat insight_student_ai singkat yang merangkum pola perkembangan siswa dari semua observasi.
+Buat analisis_capaian untuk setiap matriks A-F berdasarkan seluruh rubric, termasuk kekuatan,
+area yang masih memerlukan bantuan, dan arah pendampingan berikutnya.
+Kembalikan JSON valid saja:
+{"insight_student_ai":"...","analisis_capaian":{"A":{"insight":"..."},"B":{"insight":"..."},"C":{"insight":"..."},"D":{"insight":"..."},"E":{"insight":"..."},"F":{"insight":"..."}}}
+Nama matriks: {$this->encode(self::MATRIX_NAMES)}
+Ringkasan skor terhitung: {$this->encode($scores)}
+Seluruh data observasi dan rubric: {$this->encode($observations)}
+Nama siswa: {$studentName}
+PROMPT;
+
+        $decoded = json_decode($this->requestStructured($prompt), true);
+        $overallInsight = $decoded['insight_student_ai'] ?? null;
+        $matrixAnalysis = $decoded['analisis_capaian'] ?? null;
+
+        if (! is_string($overallInsight) || ! is_array($matrixAnalysis)) {
+            throw new RuntimeException('Respons AI analisis siswa tidak valid.');
+        }
+
+        $analysis = collect(self::MATRIX_NAMES)->mapWithKeys(function (string $matrixName, string $matrix) use ($scores, $matrixAnalysis): array {
+            $insight = $matrixAnalysis[$matrix]['insight'] ?? null;
+
+            if (! is_string($insight)) {
+                throw new RuntimeException("Analisis AI matriks {$matrix} tidak lengkap.");
             }
 
-            return [$code => [
-                'aspect_code' => substr($code, 0, 2),
-                'insight' => (string) $item['insight'],
-                'recommendation' => (string) $item['recommendation'],
+            $maxScore = $scores[$matrix]['max_score'];
+
+            return [$matrix => [
+                'matrix' => $matrixName,
+                'total_score' => $scores[$matrix]['total_score'],
+                'max_score' => $maxScore,
+                'percent' => $maxScore > 0 ? (int) round(($scores[$matrix]['total_score'] / $maxScore) * 100) : 0,
+                'insight' => $insight,
             ]];
         })->all();
+
+        return [
+            'insight_student_ai' => $overallInsight,
+            'analisis_capaian' => $analysis,
+        ];
     }
 
     /**

@@ -32,6 +32,7 @@ class StudentObservationResource extends JsonResource
             'discuss_teacher' => $this->discuss_teacher,
             'files' => $this->files ?? [],
             'ai_recommendation' => $this->ai_recommendation ?? [],
+            'analysis_ai' => $this->analysis_ai ?? [],
             'created_at' => $this->created_at?->toISOString(),
         ];
     }

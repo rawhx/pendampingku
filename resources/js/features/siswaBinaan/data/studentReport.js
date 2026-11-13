@@ -58,7 +58,9 @@ export function getStudentReport(student, observations = []) {
             maxScore,
             answeredCount: rubricScores.length,
             observationCount: notes.length,
-            insight: insights[category.id],
+            insight:
+                student.analisis_capaian?.[category.id]?.insight ??
+                insights[category.id],
         };
     });
 

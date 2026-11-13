@@ -1,6 +1,8 @@
 import { calculateAge, initialTambahSiswaForm } from '../data/tambahSiswa';
 
 export function toStudentUi(student) {
+    const insightStudentAi = student.insight_student_ai?.trim() || null;
+
     return {
         ...student,
         name: student.full_name,
@@ -12,7 +14,8 @@ export function toStudentUi(student) {
             label: student.status,
             tone: student.status === 'Aktif' ? 'success' : 'warning',
         },
-        insight: 'Belum ada catatan observasi untuk siswa ini.',
+        insight_student_ai: insightStudentAi,
+        insight: insightStudentAi,
     };
 }
 

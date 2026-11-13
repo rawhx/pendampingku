@@ -9,7 +9,9 @@ import {
 } from '../utils/catatanHarianValidation';
 import {
     createStudentObservation,
+    downloadStudentObservationPdf,
     generateStudentRecommendation,
+    invalidateStudentsCache,
 } from '@/features/siswaBinaan/services/studentApi';
 import { router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
@@ -21,6 +23,7 @@ export default function useCatatanHarianForm(student) {
     const [step, setStep] = useState(1);
     const [variantIndex, setVariantIndex] = useState(0);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [aiError, setAiError] = useState('');
 
     const fallbackRecommendation = useMemo(
@@ -81,10 +84,7 @@ export default function useCatatanHarianForm(student) {
             .map((item) => `${item.heading}: ${item.body}`)
             .join('\n\n');
 
-        setForm((current) => ({
-            ...current,
-            notes: current.notes ? `${current.notes}\n\n${narrative}` : narrative,
-        }));
+        setForm((current) => ({ ...current, notes: narrative }));
         setSaved(false);
         clearError('notes');
     };
@@ -131,6 +131,10 @@ export default function useCatatanHarianForm(student) {
     };
 
     const saveNote = async () => {
+        if (isSaving) {
+            return;
+        }
+
         const stepOneErrors = validateStepOne(form);
         const stepTwoErrors = validateStepTwo(form);
         const nextErrors = { ...stepOneErrors, ...stepTwoErrors };
@@ -147,8 +151,10 @@ export default function useCatatanHarianForm(student) {
             .map((file) => file.file)
             .filter(Boolean);
 
+        setIsSaving(true);
+
         try {
-            await createStudentObservation(student.id, {
+            const observation = await createStudentObservation(student.id, {
                 observed_on: form.date,
                 start_time: form.startTime,
                 end_time: form.endTime,
@@ -163,16 +169,25 @@ export default function useCatatanHarianForm(student) {
                 files,
                 ai_recommendation: recommendation,
             });
+            invalidateStudentsCache();
+            await downloadStudentObservationPdf(student.id, observation.id);
         } catch (error) {
             const apiErrors = error.response?.data?.errors;
             const message = apiErrors
                 ? Object.values(apiErrors).flat()[0]
                 : error.response?.data?.message;
+            const isPdfDownloadError = error.config?.url?.endsWith('/pdf');
 
             setErrors({
-                form: message || 'Catatan gagal disimpan. Silakan coba lagi.',
+                form: isPdfDownloadError
+                    ? 'Catatan berhasil disimpan, tetapi PDF gagal diunduh. Silakan unduh dari histori catatan.'
+                    : message || 'Catatan gagal disimpan. Silakan coba lagi.',
             });
-            return;
+            if (!isPdfDownloadError) {
+                return;
+            }
+        } finally {
+            setIsSaving(false);
         }
         window.sessionStorage.setItem(
             'pendampingku:catatan-success',
@@ -229,6 +244,7 @@ export default function useCatatanHarianForm(student) {
         goBack,
         saveNote,
         isGenerating,
+        isSaving,
         aiError,
     };
 }

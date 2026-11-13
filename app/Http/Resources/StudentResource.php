@@ -29,6 +29,8 @@ class StudentResource extends JsonResource
             'parent_name' => $this->parent_name,
             'parent_contact' => $this->parent_contact,
             'emergency_contact' => $this->emergency_contact,
+            'insight_student_ai' => $this->insight_student_ai,
+            'analisis_capaian' => $this->analisis_capaian ?? [],
             'created_at' => $this->created_at?->toISOString(),
         ];
     }

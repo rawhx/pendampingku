@@ -32,5 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('students/{student}/observations', [StudentObservationController::class, 'index']);
     Route::post('students/{student}/observations', [StudentObservationController::class, 'store']);
     Route::get('students/{student}/observations/{observation}', [StudentObservationController::class, 'show']);
+    Route::get('students/{student}/observations/{observation}/pdf', [StudentObservationController::class, 'downloadPdf']);
     Route::post('students/{student}/observations/generate-ai', [StudentObservationController::class, 'generate']);
 })->scopeBindings();

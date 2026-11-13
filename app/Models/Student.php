@@ -32,6 +32,8 @@ class Student extends Model
         'parent_name',
         'parent_contact',
         'emergency_contact',
+        'insight_student_ai',
+        'analisis_capaian',
     ];
 
     /**
@@ -43,6 +45,7 @@ class Student extends Model
             'birth_date' => 'date',
             'mentoring_start_date' => 'date',
             'grade' => 'integer',
+            'analisis_capaian' => 'array',
         ];
     }
 

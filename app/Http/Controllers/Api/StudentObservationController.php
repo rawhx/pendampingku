@@ -9,11 +9,13 @@ use App\Models\Student;
 use App\Models\StudentObservation;
 use App\Services\StudentObservationAiService;
 use App\Services\SupabaseStorageService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class StudentObservationController extends Controller
@@ -41,11 +43,21 @@ class StudentObservationController extends Controller
         $validated = $request->validated();
 
         try {
-            $rubricInsights = $aiService->generateRubricInsights(
+            $aiAnalysis = $aiService->generateRubricInsights(
                 $validated['field_notes'],
                 $ownedStudent->full_name,
                 $validated['rubric'],
                 $validated['qualitative'],
+                [
+                    'observed_on' => $validated['observed_on'],
+                    'start_time' => $validated['start_time'],
+                    'end_time' => $validated['end_time'],
+                    'subject' => $validated['subject'],
+                    'emotion' => $validated['emotion'],
+                    'strategy' => $validated['strategy'],
+                    'parent_report' => $validated['parent_report'],
+                    'discuss_teacher' => $validated['discuss_teacher'],
+                ],
             );
         } catch (Throwable $exception) {
             report($exception);
@@ -55,13 +67,45 @@ class StudentObservationController extends Controller
             ]);
         }
 
+        try {
+            $existingObservations = $ownedStudent->observations()
+                ->with('rubrics')
+                ->get()
+                ->map(fn (StudentObservation $observation): array => [
+                    'observed_on' => $observation->observed_on?->toDateString(),
+                    'field_notes' => $observation->field_notes,
+                    'qualitative' => $observation->qualitative,
+                    'rubrics' => $observation->rubrics->map(fn ($rubric): array => [
+                        'rubric_code' => $rubric->rubric_code,
+                        'score' => $rubric->score,
+                    ])->all(),
+                ])->all();
+            $existingObservations[] = [
+                'observed_on' => $validated['observed_on'],
+                'field_notes' => $validated['field_notes'],
+                'qualitative' => $validated['qualitative'],
+                'rubrics' => collect($validated['rubric'])->map(fn (string $score, string $code): array => [
+                    'rubric_code' => $code,
+                    'score' => $score,
+                ])->values()->all(),
+            ];
+            $studentAnalysis = $aiService->generateStudentAnalysis($ownedStudent->full_name, $existingObservations);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            throw ValidationException::withMessages([
+                'field_notes' => 'Analisis AI siswa belum dapat dibuat. Catatan belum disimpan, silakan coba lagi.',
+            ]);
+        }
+
         $rubric = $validated['rubric'];
+        $rubricInsights = $aiAnalysis['rubrics'];
         $uploadedFiles = $validated['files'];
         unset($validated['rubric']);
         unset($validated['files']);
 
         try {
-            $observation = DB::transaction(function () use ($ownedStudent, $validated, $rubric, $rubricInsights, $uploadedFiles, $storage): StudentObservation {
+            $observation = DB::transaction(function () use ($ownedStudent, $validated, $rubric, $rubricInsights, $uploadedFiles, $storage, $aiAnalysis, $studentAnalysis): StudentObservation {
                 $observation = $ownedStudent->observations()->create($validated);
                 $files = collect($uploadedFiles)->map(
                     fn ($file) => $storage->upload(
@@ -69,7 +113,13 @@ class StudentObservationController extends Controller
                         "students/{$ownedStudent->id}/observations/{$observation->id}/".str()->uuid().'-'.$file->hashName(),
                     ),
                 )->values()->all();
-                $observation->update(['files' => $files]);
+                $observation->update([
+                    'files' => $files,
+                    'analysis_ai' => [
+                        'matrix_insights' => $aiAnalysis['matrix_insights'],
+                        'overall_insight' => $aiAnalysis['overall_insight'],
+                    ],
+                ]);
                 $observation->rubrics()->createMany(
                     collect($rubric)->map(fn (string $score, string $code) => [
                         'rubric_code' => $code,
@@ -79,6 +129,10 @@ class StudentObservationController extends Controller
                         'ai_recommendation' => $rubricInsights[$code]['recommendation'],
                     ])->values()->all(),
                 );
+                $ownedStudent->update([
+                    'insight_student_ai' => $studentAnalysis['insight_student_ai'],
+                    'analisis_capaian' => $studentAnalysis['analisis_capaian'],
+                ]);
 
                 return $observation->load('rubrics');
             });
@@ -103,6 +157,24 @@ class StudentObservationController extends Controller
         return StudentObservationResource::make(
             $ownedStudent->observations()->with('rubrics')->findOrFail($observation->id),
         );
+    }
+
+    public function downloadPdf(
+        Request $request,
+        Student $student,
+        StudentObservation $observation,
+    ): Response {
+        $ownedStudent = $request->user()->students()->findOrFail($student->id);
+        $ownedObservation = $ownedStudent->observations()
+            ->with('rubrics')
+            ->findOrFail($observation->id);
+
+        return Pdf::loadView('pdf.student-observation', [
+            'student' => $ownedStudent,
+            'observation' => $ownedObservation,
+        ])
+            ->setPaper('a4')
+            ->download("catatan-{$ownedStudent->nickname}-{$ownedObservation->created_at->format('Y-m-d')}.pdf");
     }
 
     public function generate(

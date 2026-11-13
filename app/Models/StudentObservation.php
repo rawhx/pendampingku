@@ -28,6 +28,7 @@ class StudentObservation extends Model
         'discuss_teacher',
         'files',
         'ai_recommendation',
+        'analysis_ai',
     ];
 
     protected function casts(): array
@@ -39,6 +40,7 @@ class StudentObservation extends Model
             'discuss_teacher' => 'boolean',
             'files' => 'array',
             'ai_recommendation' => 'array',
+            'analysis_ai' => 'array',
         ];
     }
 

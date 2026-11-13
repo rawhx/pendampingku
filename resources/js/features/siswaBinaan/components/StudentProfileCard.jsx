@@ -46,7 +46,9 @@ export default function StudentProfileCard({ student }) {
                     aria-hidden="true"
                     className="h-6 w-6 shrink-0"
                 />
-                <p className="min-w-0 break-words">{student.insight}</p>
+                <p className="min-w-0 break-words">
+                    {student.insight_student_ai || 'Insight AI belum tersedia.'}
+                </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <Link href={route('siswa-binaan.edit', student.id)} className="flex h-11 items-center justify-center rounded-full bg-blue-normal px-6 text-sm font-semibold text-white transition hover:bg-blue-normal-hover focus:outline-none focus:ring-2 focus:ring-blue-normal/30 focus:ring-offset-2 sm:min-w-[150px]">Lihat Profil</Link>
