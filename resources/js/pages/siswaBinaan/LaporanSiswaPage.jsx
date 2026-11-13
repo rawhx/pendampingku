@@ -30,7 +30,6 @@ export default function LaporanSiswaPage() {
     const {
         notes,
         metrics,
-        latestNote,
         filteredNotes,
         query,
         sortOrder,
@@ -106,14 +105,35 @@ export default function LaporanSiswaPage() {
                             </div>
                             <h2 className="mt-5 text-base leading-[1.2] text-black-normal">Analisis Capaian & Rekomendasi Scaffolding</h2>
                             <div className="mt-4 min-h-[210px] max-h-[300px] overflow-y-auto rounded-[28px] bg-white px-5 py-4 text-justify text-base  text-black-normal shadow-[0_0_4px_rgba(0,0,0,0.08)]">
-                                <p>
-                                    <span className="font-bold text-blue-normal">Kemandirian & Regulasi Diri:</span>{' '}
-                                    {latestNote?.qualitative?.factual || student.insight}
-                                </p>
-                                <p className="mt-3">
-                                    <span className="font-bold text-blue-normal">Komunikasi & Sosial:</span>{' '}
-                                    Gunakan hasil observasi untuk menyusun dukungan yang konsisten pada sesi berikutnya.
-                                </p>
+                                {student.insight_student_ai ? (
+                                    <p>
+                                        <span className="font-bold text-blue-normal">Insight keseluruhan:</span>{' '}
+                                        {student.insight_student_ai}
+                                    </p>
+                                ) : (
+                                    <p className="text-black-muted">
+                                        Insight keseluruhan siswa belum tersedia.
+                                    </p>
+                                )}
+
+                                {metrics.some((metric) =>
+                                    student.analisis_capaian?.[metric.id]?.insight,
+                                ) && (
+                                    <div className="mt-4 flex flex-col gap-3">
+                                        {metrics
+                                            .filter((metric) =>
+                                                student.analisis_capaian?.[metric.id]?.insight,
+                                            )
+                                            .map((metric) => (
+                                                <p key={metric.id}>
+                                                    <span className="font-bold text-blue-normal">
+                                                        {metric.shortTitle}:
+                                                    </span>{' '}
+                                                    {student.analisis_capaian[metric.id].insight}
+                                                </p>
+                                            ))}
+                                    </div>
+                                )}
                             </div>
                         </section>
                     </div>
