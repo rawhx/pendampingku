@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
+import GlobalNotification from '@/components/common/GlobalNotification';
 import SplashScreen from '@/components/common/SplashScreen';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -48,7 +49,12 @@ createInertiaApp({
 
             return (
                 <>
-                    {!showSplash && <App {...props} />}
+                    {!showSplash && (
+                        <>
+                            <App {...props} />
+                            <GlobalNotification />
+                        </>
+                    )}
 
                     <AnimatePresence>
                         {showSplash && <SplashScreen key="splash-screen" />}
