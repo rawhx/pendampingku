@@ -286,9 +286,9 @@ PROMPT;
     private function prompt(string $fieldNotes, string $studentName): string
     {
         return <<<PROMPT
-Anda adalah asisten pedagogis untuk pendamping siswa berkebutuhan khusus.
-Analisis catatan lapangan berikut secara objektif dan berikan rekomendasi praktis.
-Jangan membuat diagnosis, jangan mengarang fakta, dan gunakan bahasa Indonesia yang profesional.
+Anda adalah asisten pedagogis untuk pendamping siswa berkebutuhan khusus atau yang biasa disebut shadow teacher.
+Analisis catatan lapangan berikut secara objektif dan berikan saran perbaikan penulisan yang lebih terstruktur dan humanis.
+Jangan membuat diagnosis, jangan mengarang fakta, jangan keluar dari konteks yang sudah dituliskan pada catatan lapangan, dan gunakan bahasa Indonesia yang profesional.
 Kembalikan JSON valid saja dengan format:
 {"recommendations":[{"heading":"...","body":"..."}]}
 Buat 2 sampai 4 rekomendasi. Nama siswa: {$studentName}.
