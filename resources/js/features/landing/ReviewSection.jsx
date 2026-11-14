@@ -61,7 +61,7 @@ function Stars() {
 
 function ReviewCard({ review }) {
     return (
-        <figure className="flex w-80 shrink-0 flex-col rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md sm:w-100">
+        <figure className="flex w-[min(82vw,20rem)] shrink-0 flex-col rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md sm:w-100">
             <div className="flex items-center gap-2">
                 <Stars />
                 <span className="text-xs text-white">Assesmen akurat</span>
@@ -97,7 +97,7 @@ export default function ReviewSection() {
             }}
             // overflow-x-clip (bukan overflow-hidden): memotong lebar elips yang
             // melebihi layar, tapi shadow di atas lengkungan tetap terlihat
-            className="relative overflow-x-clip pb-28 scroll-mt-28"
+            className="relative overflow-x-clip pb-16 scroll-mt-[-130px] sm:pb-28"
         >
             {/* animasi slide: dipause saat di-hover, mati jika reduced motion */}
             <style>{`
@@ -135,13 +135,13 @@ export default function ReviewSection() {
                 <div className="mx-auto mb-12 max-w-3xl px-4 text-center sm:px-6">
                     <motion.h2
                         variants={itemVariants}
-                        className="mb-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+                        className="mb-3 text-2xl font-bold tracking-tight text-white sm:text-4xl"
                     >
                         Testimoni
                     </motion.h2>
                     <motion.p
                         variants={itemVariants}
-                        className="text-base leading-relaxed text-white/80"
+                        className="px-2 text-sm leading-relaxed text-white/80 sm:px-0 sm:text-base"
                     >
                         Dipercaya oleh Guru Berdedikasi dan Orang Tua yang Peduli
                     </motion.p>

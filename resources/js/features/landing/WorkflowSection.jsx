@@ -44,7 +44,7 @@ export default function WorkflowSection() {
     return (
         <section
             id="alur-kerja"
-            className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-20 sm:px-6 -scroll-mt-10"
+            className="relative flex min-h-0 flex-col items-center overflow-hidden px-4 py-14 sm:px-6 sm:py-20 md:min-h-screen scroll-mt-0"
         >
             <motion.div
                 className="w-full"
@@ -53,10 +53,10 @@ export default function WorkflowSection() {
                 whileInView="visible"
                 viewport={{ once: true, margin: '-100px' }}
             >
-                <div className="mb-12 text-center sm:mb-25">
+                <div className="mb-9 text-center sm:mb-25">
                     <motion.h2
                         variants={itemVariants}
-                        className="mb-5 text-balance text-2xl font-bold tracking-tight text-black-normal sm:text-3xl md:text-3xl lg:text-4xl"
+                        className="mb-4 text-balance text-2xl font-bold leading-tight tracking-tight text-black-normal sm:mb-5 sm:text-3xl md:text-3xl lg:text-4xl"
                     >
                         Alur Kerja Cepat & Intuitif
                     </motion.h2>
@@ -70,12 +70,12 @@ export default function WorkflowSection() {
                     </motion.p>
                 </div>
 
-                <div className="relative mx-auto flex w-full flex-col gap-6 px-4 sm:px-6 max-w-[60%] md:flex-row md:items-start md:gap-4 lg:px-0">
+                <div className="relative mx-auto flex w-full max-w-[calc(100%-0.5rem)] flex-col gap-4 px-0 sm:max-w-[90%] sm:gap-6 sm:px-6 md:max-w-[60%] md:flex-row md:items-start md:gap-4 lg:px-0">
                     {steps.map((step) => (
                         <motion.div
                             key={step.title}
                             variants={itemVariants}
-                            className={`flex-1 rounded-3xl border border-white/40 bg-white/10 p-4 text-center shadow-2xl shadow-blue-normal/10 backdrop-blur-xl sm:p-5 md:p-4 lg:p-6 xl:p-7 ${step.position}`}
+                            className={`flex-1 rounded-3xl border border-white/40 bg-white/10 p-5 text-center shadow-2xl shadow-blue-normal/10 backdrop-blur-xl sm:p-5 md:p-4 lg:p-6 xl:p-7 ${step.position}`}
                         >
                             <h6 className="mb-1.5 text-base font-semibold text-blue-normal sm:text-lg md:text-base lg:text-lg xl:text-xl">
                                 {step.title}

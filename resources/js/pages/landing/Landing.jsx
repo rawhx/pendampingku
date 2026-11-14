@@ -16,9 +16,10 @@ export default function LandingPage({ canLogin, canRegister }) {
 
             <FeatureSection />
 
-            <div className="mx-auto mt-30 w-full max-w-[90%] px-4 sm:px-6 md:max-w-[660px] lg:max-w-[820px] lg:px-0 xl:max-w-[900px] 2xl:max-w-[980px]">
+            <div className="mx-auto w-full max-w-[90%] px-4 sm:px-6 md:max-w-[660px] lg:max-w-[820px] lg:px-0 xl:max-w-[900px] 2xl:max-w-[980px]">
                 <div className="h-1 rounded-full bg-black-light" />
             </div>
+
             <WorkflowSection />
 
             <ReviewSection />

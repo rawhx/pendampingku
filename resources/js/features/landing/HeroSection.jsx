@@ -86,7 +86,7 @@ export default function HeroSection() {
     return (
         <section ref={heroRef} id="beranda" className="relative overflow-hidden px-4 sm:px-6">
             {/* Layar pertama: judul + deskripsi + blob (posisi blob tidak berubah) */}
-            <div className="relative flex min-h-screen items-center justify-center">
+            <div className="relative flex min-h-[82svh] items-center justify-center md:min-h-screen">
                 <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0"
@@ -108,17 +108,17 @@ export default function HeroSection() {
                     />
                 </div>
 
-                <div className={`${containerClass} pb-10 text-center`}>
+                <div className={`${containerClass} pb-8 text-center sm:pb-10`}>
                 <motion.h1
                     {...fade(0.8, 1.4)}
-                    className="text-balance text-2xl font-bold tracking-tight sm:text-3xl md:text-3xl lg:text-4xl"
+                    className="text-balance text-[1.75rem] font-bold leading-tight tracking-tight sm:text-3xl md:text-3xl lg:text-4xl"
                 >
                         Kurangi Beban Administrasi, Maksimalkan Pendampingan
                         Penuh Kasih untuk Anak Hebat
                     </motion.h1>
                 <motion.p
                     {...fade(1.6, 1.4)}
-                    className="mx-auto mt-6 max-w-4xl text-pretty text-sm leading-relaxed text-black-dark-hover sm:text-base"
+                    className="mx-auto mt-5 max-w-4xl text-pretty text-sm leading-relaxed text-black-dark-hover sm:mt-6 sm:text-base"
                 >
                         Platform cerdas berbasis AI untuk mencatat observasi
                         harian, memantau grafik perkembangan perilaku, dan
@@ -129,14 +129,14 @@ export default function HeroSection() {
             </div>
 
             {/* Fitur ringkas + kepercayaan & keamanan */}
-            <div className={`${containerClass} relative pb-24`}>
+            <div className={`${containerClass} relative pb-14 sm:pb-24`}>
                 <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-16">
                     <motion.div
                         variants={listVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-80px' }}
-                        className="rounded-3xl bg-white p-6 shadow-[0_0_28px_0_rgba(0,129,242,0.16)] sm:p-8"
+                        className="rounded-3xl bg-white p-5 shadow-[0_0_28px_0_rgba(0,129,242,0.16)] sm:p-8"
                     >
                         <ul className="flex flex-col gap-5">
                             {highlights.map((item) => (

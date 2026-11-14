@@ -92,7 +92,7 @@ export default function FeatureSection() {
         <MotionConfig reducedMotion="user">
             <section
                 id="fitur"
-                className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-20 sm:px-6 scroll-mt-28"
+                className="relative flex min-h-0 items-center justify-center overflow-hidden px-4 py-14 sm:px-6 sm:py-20 md:min-h-screen scroll-mt-0"
             >
                 <div
                     aria-hidden="true"
@@ -121,10 +121,10 @@ export default function FeatureSection() {
                     whileInView="visible"
                     viewport={{ once: true, margin: '-100px' }}
                 >
-                    <div className="mb-12 text-center sm:mb-16">
+                    <div className="mb-9 text-center sm:mb-16">
                         <motion.h2
                             variants={itemVariants}
-                            className="mb-5 text-balance text-2xl font-bold tracking-tight text-black-normal sm:text-3xl md:text-3xl lg:text-4xl"
+                            className="mb-4 text-balance text-2xl font-bold leading-tight tracking-tight text-black-normal sm:mb-5 sm:text-3xl md:text-3xl lg:text-4xl"
                         >
                             Semua yang Dibutuhkan Guru Pendamping Khusus
                             <br className="hidden sm:block" />
@@ -152,7 +152,7 @@ export default function FeatureSection() {
                             <motion.div
                                 key={feature.title}
                                 variants={makeCardVariants(feature.side)}
-                                className={`mx-auto mt-3 flex w-fit max-w-[90%] flex-col items-center justify-center rounded-xl px-2.5 py-2 text-center sm:px-3 md:absolute md:mt-0 md:max-w-[170px] lg:max-w-[200px] xl:max-w-[320px] ${feature.tone} ${feature.position}`}
+                                className={`mx-auto mt-3 flex w-full max-w-[calc(100%-0.5rem)] flex-col items-center justify-center rounded-xl px-3 py-2.5 text-center sm:max-w-[90%] sm:px-3 md:absolute md:mt-0 md:max-w-[170px] lg:max-w-[200px] xl:max-w-[320px] ${feature.tone} ${feature.position}`}
                             >
                                 <h6
                                     className={`mb-0.5 text-xs font-semibold sm:text-xs md:text-xs lg:text-sm ${feature.titleColor}`}
