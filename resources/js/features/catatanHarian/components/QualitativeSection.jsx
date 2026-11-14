@@ -1,11 +1,17 @@
 import SectionCard from './SectionCard';
 import { qualitativeFields } from '../data/catatanHarian';
 
-export default function QualitativeSection({ values = {}, errors = {}, onChange }) {
+export default function QualitativeSection({
+    values = {},
+    errors = {},
+    fields = qualitativeFields,
+    startIndex = 1,
+    onChange,
+}) {
     return (
         <SectionCard title="Observasi Kualitatif Terstruktur">
             <div className="flex flex-col gap-6">
-                {qualitativeFields.map((field, index) => (
+                {fields.map((field, index) => (
                     <div
                         key={field.id}
                         className="flex flex-col gap-2"
@@ -14,7 +20,7 @@ export default function QualitativeSection({ values = {}, errors = {}, onChange 
                             htmlFor={`qualitative-${field.id}`}
                             className="text-base font-medium leading-tight text-black-normal"
                         >
-                            <span className="mr-2">{index + 1}.</span>
+                            <span className="mr-2">{startIndex + index}.</span>
                             {field.label}
                         </label>
                         <textarea

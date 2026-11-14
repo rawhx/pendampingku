@@ -22,7 +22,6 @@ export default function SessionDetailsSection({
 }) {
     return (
         <SectionCard
-            index={1}
             title="Mendata Sesi Observasi"
             badge="Wajib Diisi"
         >

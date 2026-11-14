@@ -1,4 +1,4 @@
-import { qualitativeFields, rubricCategories } from '../data/catatanHarian';
+import { rubricCategories } from '../data/catatanHarian';
 
 export function validateStepOne(form) {
     const errors = {};
@@ -21,12 +21,6 @@ export function validateStepOne(form) {
         errors.rubric = 'Semua penilaian rubric A–F wajib diisi.';
     }
 
-    qualitativeFields.forEach((field) => {
-        if (!form.qualitative?.[field.id]?.trim()) {
-            errors[`qualitative.${field.id}`] = `${field.label} wajib diisi.`;
-        }
-    });
-
     return errors;
 }
 
@@ -40,6 +34,12 @@ export function validateStepTwo(form) {
     if (!form.files?.length) {
         errors.files = 'Minimal satu dokumentasi wajib diunggah.';
     }
+
+    ['activity', 'outcome', 'followUp'].forEach((field) => {
+        if (!form.qualitative?.[field]?.trim()) {
+            errors[`qualitative.${field}`] = 'Observasi kualitatif wajib diisi.';
+        }
+    });
 
     return errors;
 }

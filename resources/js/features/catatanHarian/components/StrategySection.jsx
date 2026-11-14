@@ -2,7 +2,7 @@ import SectionCard from './SectionCard';
 
 export default function StrategySection({ value, error, onChange }) {
     return (
-        <SectionCard index={5} title="Intervensi & Strategi Pendampingan">
+        <SectionCard title="Intervensi & Strategi Pendampingan">
             <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between gap-3 text-base font-medium leading-[1.2]">
                     <label

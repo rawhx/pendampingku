@@ -13,7 +13,6 @@ export default function ObservationNotesSection({
 }) {
     return (
         <SectionCard
-            index={4}
             title="Catatan Observasi Lapangan & Sintesis AI"
         >
             <div className="grid gap-10 lg:grid-cols-2">
@@ -73,9 +72,6 @@ export default function ObservationNotesSection({
                             <span className="text-base text-black-normal">
                                 AI Powered Assistant
                             </span>
-                        </span>
-                        <span className="text-base text-white-dark">
-                            Standar Narasi IEP
                         </span>
                     </div>
 

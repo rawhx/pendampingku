@@ -11,7 +11,7 @@ export default function VisibilitySection({
     const className = student?.className ?? 'kelas';
 
     return (
-        <SectionCard index={7} title="Pengaturan Visibilitas & Kolaborasi">
+        <SectionCard title="Pengaturan Visibilitas & Kolaborasi">
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex max-w-[607px] flex-col gap-1">

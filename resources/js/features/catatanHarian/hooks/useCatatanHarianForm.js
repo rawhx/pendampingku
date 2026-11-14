@@ -1,3 +1,4 @@
+import { notify } from '@/components/common/notification';
 import {
     createInitialForm,
     getAiRecommendation,
@@ -112,13 +113,6 @@ export default function useCatatanHarianForm(student) {
         }
 
         setErrors({});
-        setForm((current) => ({
-            ...current,
-            notes:
-                current.notes?.trim() || current.qualitative?.factual
-                    ? current.notes?.trim() || current.qualitative.factual
-                    : current.notes,
-        }));
         setSaved(false);
         setStep(2);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -150,8 +144,14 @@ export default function useCatatanHarianForm(student) {
         const files = form.files
             .map((file) => file.file)
             .filter(Boolean);
+        const qualitative = {
+            ...form.qualitative,
+            factual: form.notes,
+            intervention: form.strategy,
+        };
 
         setIsSaving(true);
+        let pdfDownloadFailed = false;
 
         try {
             const observation = await createStudentObservation(student.id, {
@@ -161,7 +161,7 @@ export default function useCatatanHarianForm(student) {
                 subject: form.subject,
                 emotion: form.emotion,
                 rubric: form.rubric,
-                qualitative: form.qualitative,
+                qualitative,
                 field_notes: form.notes,
                 strategy: form.strategy,
                 parent_report: form.parentReport,
@@ -178,21 +178,40 @@ export default function useCatatanHarianForm(student) {
                 : error.response?.data?.message;
             const isPdfDownloadError = error.config?.url?.endsWith('/pdf');
 
-            setErrors({
-                form: isPdfDownloadError
-                    ? 'Catatan berhasil disimpan, tetapi PDF gagal diunduh. Silakan unduh dari histori catatan.'
-                    : message || 'Catatan gagal disimpan. Silakan coba lagi.',
-            });
-            if (!isPdfDownloadError) {
+            if (isPdfDownloadError) {
+                pdfDownloadFailed = true;
+                notify({
+                    title: 'Catatan tersimpan, PDF gagal diunduh',
+                    message:
+                        'Catatan berhasil disimpan, tetapi PDF gagal diunduh. Silakan unduh dari histori catatan.',
+                    tone: 'error',
+                    duration: 8000,
+                });
+            } else {
+                const errorMessage =
+                    message || 'Catatan gagal disimpan. Silakan coba lagi.';
+
+                setErrors({ form: errorMessage });
+                notify({
+                    title: 'Gagal menyimpan catatan harian',
+                    message: errorMessage,
+                    tone: 'error',
+                    duration: 8000,
+                });
+
                 return;
             }
         } finally {
             setIsSaving(false);
         }
-        window.sessionStorage.setItem(
-            'pendampingku:catatan-success',
-            `Catatan harian ${student.name} berhasil disimpan.`,
-        );
+
+        if (!pdfDownloadFailed) {
+            notify({
+                title: 'Catatan harian berhasil disimpan',
+                message: `Catatan harian ${student.name} berhasil disimpan. Mengalihkan ke Siswa Binaan...`,
+                tone: 'success',
+            });
+        }
 
         setSaved(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -4,7 +4,6 @@ import { icons } from '../../../assets/icons/icons';
 export default function EmotionCheckInSection({ value, options, error, onChange }) {
     return (
         <SectionCard
-            index={2}
             title="Kondisi Emosi Awal Siswa (Baseline Check-In)"
             instruction="Pilih 1 kondisi yang paling dominan saat sesi dimulai"
         >

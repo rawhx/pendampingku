@@ -57,7 +57,6 @@ export default function DocumentationSection({ files = [], requiredError, onFile
 
     return (
         <SectionCard
-            index={6}
             title="Dokumentasi Foto & Karya Siswa"
             instruction="Maksimal 5 berkas (JPG/PNG, maks. 5MB)"
         >
