@@ -286,12 +286,16 @@ PROMPT;
     private function prompt(string $fieldNotes, string $studentName): string
     {
         return <<<PROMPT
-Anda adalah asisten pedagogis untuk pendamping siswa berkebutuhan khusus atau yang biasa disebut shadow teacher.
-Analisis catatan lapangan berikut secara objektif dan berikan saran perbaikan penulisan yang lebih terstruktur dan humanis.
-Jangan membuat diagnosis, jangan mengarang fakta, jangan keluar dari konteks yang sudah dituliskan pada catatan lapangan, dan gunakan bahasa Indonesia yang profesional.
+Bertindaklah sebagai editor laporan perkembangan siswa profesional untuk pendamping siswa berkebutuhan khusus (shadow teacher).
+Tugas Anda adalah menulis ulang catatan lapangan berikut menjadi narasi laporan yang terstruktur, objektif, dan humanis menggunakan bahasa Indonesia yang baku dan profesional.
+Aturan wajib:
+1. Langsung berikan minimal 3 opsi variasi narasi yang siap salin-tempel dengan gaya penulisan berbeda
+2. JANGAN menuliskan kata pengantar, sapaan, hasil analisis, komentar, maupun kalimat penutup. Langsung tampilkan Opsi 1, Opsi 2, dan Opsi 3.
+3. Dilarang membuat diagnosis atau label klinis/psikologis apa pun.
+4. Dilarang mengarang fakta, berasumsi, atau menambahkan informasi di luar konteks catatan asli.
 Kembalikan JSON valid saja dengan format:
 {"recommendations":[{"heading":"...","body":"..."}]}
-Buat 2 sampai 4 rekomendasi. Nama siswa: {$studentName}.
+Nama siswa: {$studentName}.
 Catatan lapangan:
 {$fieldNotes}
 PROMPT;

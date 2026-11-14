@@ -547,38 +547,6 @@
         </p>
     </div>
 
-    {{-- Insight Per Matriks --}}
-    @if (! empty($matrixInsights))
-        <h3>Insight per Matriks</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 18%;">Matriks</th>
-                    <th>Insight</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($matrixInsights as $matrix => $insight)
-                    <tr>
-                        <td>
-                            <strong>{{ $domainName($matrix) }}</strong>
-                        </td>
-
-                        <td>
-                            {{
-                                is_string($insight)
-                                    ? $insight
-                                    : json_encode($insight, JSON_UNESCAPED_UNICODE)
-                            }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-
     {{-- Catatan dan Tindak Lanjut --}}
     <h2>Catatan dan Tindak Lanjut</h2>
 
