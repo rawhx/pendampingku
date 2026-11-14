@@ -20,7 +20,7 @@ export default function QualitativeSection({
                             htmlFor={`qualitative-${field.id}`}
                             className="text-base font-medium leading-tight text-black-normal"
                         >
-                            <span className="mr-2">{startIndex + index}.</span>
+                            {/* <span className="mr-2">{startIndex + index}.</span> */}
                             {field.label}
                         </label>
                         <textarea
