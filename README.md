@@ -1,6 +1,6 @@
 # PendampingKu
 
-Platform web untuk membantu Guru Pendamping Khusus (GPK) mencatat observasi harian, menganalisis capaian perkembangan siswa secara terstruktur, dan menghasilkan laporan observasi dalam format PDF.
+Platform web untuk membantu Shadow Teacher mencatat observasi harian, menganalisis capaian perkembangan siswa secara terstruktur, dan menghasilkan laporan observasi dalam format PDF.
 
 - **Kategori:** Web Application
 - **Event:** Hackathon LOGICODIX 2026
@@ -39,34 +39,34 @@ Platform web untuk membantu Guru Pendamping Khusus (GPK) mencatat observasi hari
 
 ### Deskripsi
 
-PendampingKu adalah aplikasi web yang dirancang untuk mendukung pekerjaan Guru Pendamping Khusus di sekolah inklusi. Aplikasi ini menyediakan alur pencatatan observasi harian yang terstruktur, analisis capaian berbasis enam aspek perkembangan, serta laporan observasi yang dapat diunduh sebagai PDF.
+PendampingKu adalah aplikasi web yang dirancang untuk mendukung pekerjaan Shadow Teacher dalam membimbing siswa berkebutuhan khusus di sekolah. Aplikasi ini menyediakan alur pencatatan observasi harian yang terstruktur, analisis capaian berbasis enam aspek perkembangan, serta laporan observasi yang dapat diunduh sebagai PDF.
 
 Setiap catatan observasi disusun dari indikator rubrik yang tersebar dalam enam aspek: Regulasi Emosi, Regulasi Perilaku, Kemandirian, Komunikasi, Interaksi Sosial, dan Perkembangan Akademik. Data observasi kemudian diolah menjadi insight per indikator, insight per aspek, dan analisis kumulatif siswa.
 
 ### Tujuan Pengembangan
 
-1. Mengurangi beban administrasi GPK dalam mendokumentasikan sesi pendampingan.
+1. Mengurangi beban administrasi shadow teacher dalam mendokumentasikan sesi pendampingan.
 2. Menyeragamkan format observasi agar data perkembangan siswa lebih konsisten.
-3. Membantu GPK mengidentifikasi kekuatan dan area yang masih memerlukan dukungan.
+3. Membantu Shadow Teacher mengidentifikasi kekuatan dan area yang masih memerlukan dukungan.
 4. Menyediakan riwayat observasi dan laporan PDF yang mudah diakses kembali.
 5. Menyediakan fondasi data yang terstruktur untuk evaluasi pendampingan berikutnya.
 
 ### Permasalahan yang Ingin Diselesaikan
 
-- Pencatatan observasi sering dilakukan secara terpisah-pisah sehingga sulit dianalisis.
+- Pencatatan observasi sering dilakukan secara terpisah-pisah dan manual sehingga sulit dianalisis.
 - Narasi laporan membutuhkan waktu lama karena harus disusun ulang dari catatan mentah.
 - Perkembangan siswa sulit dipantau secara konsisten ketika data tidak terpusat.
 - Dokumentasi sesi pendampingan dan hasil intervensi tidak selalu tersimpan rapi.
 
 ### Solusi yang Ditawarkan
 
-PendampingKu menggabungkan pencatatan observasi, rubrik terstruktur, analisis AI, riwayat, dan ekspor PDF dalam satu aplikasi web. GPK dapat mengisi observasi melalui formulir dua langkah, mengunggah dokumentasi foto, lalu melihat ringkasan capaian pada halaman laporan siswa.
+PendampingKu menggabungkan pencatatan observasi, rubrik terstruktur, analisis AI, riwayat, dan ekspor PDF dalam satu aplikasi web. Shadow Teacher dapat mengisi observasi melalui formulir dua langkah, mengunggah dokumentasi foto, lalu melihat ringkasan capaian pada halaman laporan siswa.
 
 ### Target Pengguna
 
 | Pengguna | Peran dalam aplikasi |
 |---|---|
-| Guru Pendamping Khusus (GPK) | Pengguna utama yang mengelola data siswa dan catatan observasi |
+| Shadow Teacher | Pengguna utama yang mengelola data siswa dan catatan observasi |
 
 ---
 
@@ -85,13 +85,13 @@ PendampingKu menggabungkan pencatatan observasi, rubrik terstruktur, analisis AI
 
 | Fitur | Fungsi | Manfaat |
 |---|---|---|
-| Autentikasi akun | Registrasi, login email/password, login Google, reset password, dan logout | GPK dapat mengakses data secara aman melalui akun masing-masing |
-| Dashboard | Menampilkan jumlah siswa aktif, siswa yang belum diobservasi hari ini, laporan siap kirim, dan aktivitas terbaru | Memberi gambaran cepat kondisi pendampingan harian |
+| Autentikasi akun | Registrasi, login email/password, login Google, reset password, dan logout | Shadow Teacher dapat mengakses data secara aman melalui akun masing-masing |
+| Dashboard | Menampilkan jumlah siswa aktif, siswa yang belum diobservasi hari ini, laporan siap kirim hari ini, dan aktivitas terbaru | Memberi gambaran cepat kondisi pendampingan harian |
 | Manajemen siswa binaan | Tambah, lihat, edit, cari, dan filter siswa berdasarkan kelas serta jenis disabilitas | Data siswa terpusat dan mudah ditemukan |
 | Observasi harian terstruktur | Formulir dua langkah dengan 24 indikator rubrik, skala bantuan 0–4, dan opsi N/O | Menghasilkan data observasi yang konsisten dan terukur |
-| Analisis AI per catatan | Insight dan rekomendasi per indikator, per aspek, dan keseluruhan catatan | Membantu GPK menafsirkan data observasi secara lebih cepat |
+| Analisis AI per catatan | Insight dan rekomendasi per indikator, per aspek, dan keseluruhan catatan | Membantu Shadow Teacher menafsirkan data observasi secara lebih cepat |
 | Analisis kumulatif siswa | Merangkum seluruh histori observasi menjadi insight siswa dan analisis capaian enam aspek | Memudahkan pemantauan perkembangan jangka panjang |
-| Rekomendasi naratif AI | Menghasilkan rekomendasi dari catatan lapangan melalui tombol khusus | Membantu menyusun narasi tindak lanjut |
+| Rekomendasi naratif AI | Menghasilkan rekomendasi dari catatan lapangan melalui tombol khusus | Membantu menyusun dan merapikan narasi tindak lanjut |
 | Dokumentasi sesi | Unggah 1–5 foto JPG/PNG dengan ukuran maksimal 5 MB per file | Bukti visual sesi tersimpan bersama catatan |
 | Laporan siswa | Radar chart enam aspek, skor capaian, insight AI, dan riwayat observasi | Mempermudah evaluasi dan diskusi tindak lanjut |
 | Ekspor PDF | Mengunduh catatan observasi dalam format A4 | Laporan dapat dicetak atau dibagikan kepada pihak terkait |
@@ -269,14 +269,14 @@ Alur utama penyimpanan catatan observasi:
 ```mermaid
 sequenceDiagram
     autonumber
-    actor GPK as Guru Pendamping Khusus
+    actor Shadow Teacher as 
     participant UI as React + Inertia
     participant API as Laravel API
     participant AI as Provider AI
     participant SB as Supabase Storage
     participant DB as Database
 
-    GPK->>UI: Isi 6 aspek, catatan, dan dokumentasi
+    Shadow Teacher->>UI: Isi 6 aspek, catatan, dan dokumentasi
     UI->>API: POST /api/students/:student/observations
     API->>API: Validasi request dan kepemilikan siswa
     API->>AI: generateRubricInsights()
@@ -777,7 +777,7 @@ Fitur AI yang tersedia:
 
 ### 9.2 Alur Penggunaan AI
 
-1. GPK mengisi catatan observasi dan rubrik.
+1. Shadow Teacher mengisi catatan observasi dan rubrik.
 2. Saat catatan disimpan, Laravel mengirim prompt terstruktur ke provider AI.
 3. Service meminta respons JSON dengan format yang telah ditentukan.
 4. Laravel memvalidasi kelengkapan JSON sebelum menyimpan data.
@@ -793,7 +793,7 @@ Fitur AI yang tersedia:
 - Request memiliki timeout dan mekanisme retry.
 - Gemini mencoba model secara berurutan jika terjadi error atau kuota habis.
 - Jika AI gagal, catatan observasi tidak disimpan dan pengguna menerima pesan validasi.
-- Insight AI bersifat pendukung keputusan, bukan pengganti penilaian profesional GPK.
+- Insight AI bersifat pendukung keputusan, bukan pengganti penilaian profesional Shadow Teacher.
 
 ### 9.4 Data yang Dikirim ke Provider AI
 
@@ -968,12 +968,11 @@ pendampingku/
 
 ## 13. Batasan dan Catatan Keamanan
 
-### 13.1 Batasan Implementasi
+### 13.1 Batasan Implementasi pada tahap MVP
 
 - Aplikasi menggunakan satu tipe akun; belum ada pemisahan role.
 - Laporan dibagikan melalui PDF.
 - Catatan observasi belum dapat diedit atau dihapus melalui aplikasi.
-- Rekomendasi AI aktual diminta melalui tombol khusus.
 - Testimoni pada landing page merupakan konten contoh.
 
 ### 13.2 Catatan Keamanan
