@@ -1,4 +1,5 @@
 import ActivityFeed from '@/features/dashboard/components/ActivityFeed';
+import DashboardEmptyState from '@/features/dashboard/components/DashboardEmptyState';
 import GreetingCard from '@/features/dashboard/components/GreetingCard';
 import StatCard from '@/features/dashboard/components/StatCard';
 import StudentCard from '@/features/dashboard/components/StudentCard';
@@ -17,20 +18,31 @@ import { useEffect, useState } from 'react';
 export default function DashboardPage() {
     const { auth } = usePage().props;
     const [dashboard, setDashboard] = useState(null);
+    const [loadError, setLoadError] = useState('');
 
     useEffect(() => {
         let isCurrent = true;
 
-        getDashboard().then((data) => {
-            if (isCurrent) {
-                setDashboard(data);
-            }
-        });
+        getDashboard()
+            .then((data) => {
+                if (isCurrent) {
+                    setDashboard(data);
+                }
+            })
+            .catch(() => {
+                if (isCurrent) {
+                    setLoadError(
+                        'Gagal memuat data dashboard. Silakan muat ulang halaman.',
+                    );
+                }
+            });
 
         return () => {
             isCurrent = false;
         };
     }, []);
+
+    const isLoading = dashboard === null && !loadError;
 
     const dashboardStats = stats.map((stat) =>
         stat.id === 'students'
@@ -90,17 +102,42 @@ export default function DashboardPage() {
                             </p>
                         </div>
 
-                        <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
-                            {dashboardStudents.map((student) => (
-                                <StudentCard key={student.id} {...student} />
-                            ))}
+                        <div className="mt-7">
+                            {isLoading ? (
+                                <div className="rounded-3xl bg-white/70 px-6 py-16 text-center text-sm text-black-muted">
+                                    Memuat data siswa...
+                                </div>
+                            ) : loadError ? (
+                                <div className="rounded-3xl bg-white/70 px-6 py-16 text-center text-sm text-red-700">
+                                    {loadError}
+                                </div>
+                            ) : dashboardStudents.length > 0 ? (
+                                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+                                    {dashboardStudents.map((student) => (
+                                        <StudentCard key={student.id} {...student} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <DashboardEmptyState
+                                    title="Belum ada siswa binaan aktif"
+                                    description="Tambahkan siswa terlebih dahulu agar catatan observasi harian dan laporan perkembangan bisa dibuat."
+                                    action={{
+                                        href: route('siswa-binaan.create'),
+                                        label: 'Tambah Siswa',
+                                    }}
+                                />
+                            )}
                         </div>
 
                     </div>
                 </section>
 
                 <div className="relative mx-auto mt-10 w-full max-w-7xl px-4 pb-16 sm:px-6 lg:mt-12 lg:px-0 lg:pb-20">
-                    <ActivityFeed items={dashboardActivities} />
+                    <ActivityFeed
+                        items={dashboardActivities}
+                        isLoading={isLoading}
+                        error={loadError}
+                    />
                 </div>
             </div>
         </AuthenticatedLayout>
