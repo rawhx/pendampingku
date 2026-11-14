@@ -126,8 +126,8 @@ Makna skor: 4 mandiri tanpa prompt, 3 bantuan minimal, 2 bantuan sedang,
 1 bantuan maksimal, 0 belum tercapai. N/O atau "no" tidak dihitung sebagai 0.
 Jangan mendiagnosis atau mengarang fakta. Gunakan hanya data yang tersedia.
 Buat insight_student_ai singkat yang merangkum pola perkembangan siswa dari semua observasi.
-Buat analisis_capaian untuk setiap matriks A-F berdasarkan seluruh rubric, termasuk kekuatan,
-area yang masih memerlukan bantuan, dan arah pendampingan berikutnya.
+Buat analisis_capaian untuk setiap matriks A-F berdasarkan seluruh rubric dan skor terhitung,
+termasuk insight singkat tentang kekuatan dan area yang masih memerlukan pendampingan.
 Kembalikan JSON valid saja:
 {"insight_student_ai":"...","analisis_capaian":{"A":{"insight":"..."},"B":{"insight":"..."},"C":{"insight":"..."},"D":{"insight":"..."},"E":{"insight":"..."},"F":{"insight":"..."}}}
 Nama matriks: {$this->encode(self::MATRIX_NAMES)}
@@ -170,7 +170,7 @@ PROMPT;
 
     /**
      * @param  array<int, array<string, mixed>>  $observations
-     * @return array<int, array{heading: string, body: string}>
+     * @return array<int, array{heading: string, saran_tindakan: string, sasaran_berikutnya: string}>
      */
     public function generateStudentPlan(string $studentName, array $observations): array
     {
@@ -181,9 +181,10 @@ Anda adalah asisten pedagogis untuk pendamping siswa berkebutuhan khusus atau ya
 Analisis catatan lapangan berikut secara objektif dan berikan rekomendasi praktis.
 Jangan membuat diagnosis, jangan mengarang fakta, dan gunakan bahasa Indonesia yang profesional.
 Kembalikan JSON valid saja dengan format:
-{"rencana_pendampingan":[{"heading":"...","body":"..."}]}
+{"rencana_pendampingan":[{"heading":"...","saran_tindakan":"...","sasaran_berikutnya":"..."}]}
 Buat 3 sampai 5 rencana pendampingan ke depan yang praktis dan spesifik.
-Setiap item berisi heading singkat berupa fokus area dan body berisi saran tindakan serta sasaran berikutnya.
+Setiap item berisi heading singkat berupa fokus area, saran_tindakan berisi langkah praktis,
+dan sasaran_berikutnya berisi target perkembangan yang ingin dicapai.
 Nama matriks: {$this->encode(self::MATRIX_NAMES)}
 Ringkasan skor terhitung: {$this->encode($scores)}
 Seluruh data observasi dan rubric: {$this->encode($observations)}
@@ -232,7 +233,7 @@ PROMPT;
     }
 
     /**
-     * @return array<int, array{heading: string, body: string}>
+     * @return array<int, array{heading: string, saran_tindakan: string, sasaran_berikutnya: string}>
      */
     private function normalizePlanning(mixed $planning): array
     {
@@ -242,11 +243,18 @@ PROMPT;
 
         return collect($planning)
             ->filter(fn (mixed $item): bool => is_array($item))
-            ->map(fn (array $item): array => [
-                'heading' => is_string($item['heading'] ?? null) ? trim($item['heading']) : '',
-                'body' => is_string($item['body'] ?? null) ? trim($item['body']) : '',
-            ])
-            ->filter(fn (array $item): bool => $item['heading'] !== '' && $item['body'] !== '')
+            ->map(function (array $item): array {
+                $action = $item['saran_tindakan'] ?? $item['action'] ?? null;
+                $target = $item['sasaran_berikutnya'] ?? $item['target'] ?? null;
+                $body = is_string($item['body'] ?? null) ? trim($item['body']) : '';
+
+                return [
+                    'heading' => is_string($item['heading'] ?? null) ? trim($item['heading']) : '',
+                    'saran_tindakan' => is_string($action) ? trim($action) : $body,
+                    'sasaran_berikutnya' => is_string($target) ? trim($target) : '',
+                ];
+            })
+            ->filter(fn (array $item): bool => $item['heading'] !== '' && $item['saran_tindakan'] !== '')
             ->take(5)
             ->values()
             ->all();

@@ -1,4 +1,4 @@
-import { icons } from "@/assets/icons/icons";
+import { icons } from '@/assets/icons/icons';
 
 export default function ReportProgressCard({ metric, observationCount, insight }) {
     return (
@@ -28,16 +28,12 @@ export default function ReportProgressCard({ metric, observationCount, insight }
             </div>
 
             <div className="flex items-start gap-2 rounded-3xl bg-white-light-active px-5 py-4 text-base leading-[1.2] text-black-normal">
-                <img
-                    src={icons.sparkle}
-                    alt=""
-                    aria-hidden="true"
-                    className="h-6 w-6 shrink-0"
-                />
+                <img src={icons.sparkle} alt="" aria-hidden="true" className="h-6 w-6 shrink-0" />
                 <p>
-                    <span className="font-bold">Insight GPK</span>: {insight ? insight : 'Belum ada insight'}
+                    <span className="font-bold">Insight GPK</span>: {insight || 'Belum ada insight'}
                 </p>
             </div>
+
         </article>
     );
 }

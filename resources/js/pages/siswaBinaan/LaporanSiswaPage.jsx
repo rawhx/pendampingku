@@ -155,24 +155,6 @@ export default function LaporanSiswaPage() {
                                     </p>
                                 )}
 
-                                {metrics.some((metric) =>
-                                    student.analisis_capaian?.[metric.id]?.insight,
-                                ) && (
-                                    <div className="mt-4 flex flex-col gap-3">
-                                        {metrics
-                                            .filter((metric) =>
-                                                student.analisis_capaian?.[metric.id]?.insight,
-                                            )
-                                            .map((metric) => (
-                                                <p key={metric.id}>
-                                                    <span className="font-bold text-blue-normal">
-                                                        {metric.shortTitle}:
-                                                    </span>{' '}
-                                                    {student.analisis_capaian[metric.id].insight}
-                                                </p>
-                                            ))}
-                                    </div>
-                                )}
                             </div>
                         </section>
                     </div>

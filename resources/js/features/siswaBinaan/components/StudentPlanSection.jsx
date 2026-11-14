@@ -33,9 +33,22 @@ export default function StudentPlanSection({ plan = [], observationCount = 0 }) 
                                 <h3 className="text-base font-bold leading-[1.2] text-blue-normal">
                                     {item.heading}
                                 </h3>
-                                <p className="text-base leading-[1.4] text-black-normal">
-                                    {item.body}
-                                </p>
+                                {item.saran_tindakan || item.body ? (
+                                    <p className="text-base leading-[1.5] text-black-normal">
+                                        <strong className="font-bold text-blue-normal">
+                                            Saran tindakan:
+                                        </strong>{' '}
+                                        {item.saran_tindakan || item.body}
+                                    </p>
+                                ) : null}
+                                {item.sasaran_berikutnya ? (
+                                    <p className="text-base leading-[1.5] text-black-normal">
+                                        <strong className="font-bold text-blue-normal">
+                                            Sasaran berikutnya:
+                                        </strong>{' '}
+                                        {item.sasaran_berikutnya}
+                                    </p>
+                                ) : null}
                             </div>
                         </article>
                     ))}

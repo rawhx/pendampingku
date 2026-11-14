@@ -11,6 +11,18 @@ function formatDate(dateValue) {
     }).format(date);
 }
 
+function formatCreatedAt(dateValue) {
+    if (!dateValue) return 'Waktu dibuat belum tersedia';
+
+    return new Intl.DateTimeFormat('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(new Date(dateValue));
+}
+
 export default function ObservationHistoryCard({ note, student }) {
     const [isDownloading, setIsDownloading] = useState(false);
     const [downloadError, setDownloadError] = useState('');
@@ -45,6 +57,9 @@ export default function ObservationHistoryCard({ note, student }) {
                 </div>
                 <p className="shrink-0 text-sm leading-[1.2] text-black-normal">
                     {formatDate(note.date)}{note.startTime ? ` • ${note.startTime}` : ''}
+                    <span className="block text-xs text-white-dark">
+                        Dibuat: {formatCreatedAt(note.savedAt)}
+                    </span>
                 </p>
             </div>
 
