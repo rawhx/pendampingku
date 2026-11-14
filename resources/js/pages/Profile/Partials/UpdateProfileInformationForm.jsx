@@ -39,18 +39,18 @@ export default function UpdateProfileInformation({ className = '' }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
+                <h2 className="text-xl font-bold text-blue-normal">
+                    Informasi Profil
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                <p className="mt-2 text-sm leading-relaxed text-white-dark">
+                    Perbarui nama dan alamat email yang digunakan pada akun Anda.
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Nama Lengkap" />
 
                     <TextInput
                         id="name"
@@ -66,7 +66,7 @@ export default function UpdateProfileInformation({ className = '' }) {
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="Alamat Email" />
 
                     <TextInput
                         id="email"
@@ -82,7 +82,9 @@ export default function UpdateProfileInformation({ className = '' }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing} loadingText="Menyimpan..." processing={processing}>
+                        Simpan Perubahan
+                    </PrimaryButton>
                 </div>
             </form>
         </section>
