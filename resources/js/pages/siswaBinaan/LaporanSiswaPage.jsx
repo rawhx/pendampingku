@@ -7,6 +7,24 @@ import useStudentReport from '@/features/siswaBinaan/hooks/useStudentReport';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 
+function BackIcon() {
+    return (
+        <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4"
+        >
+            <path d="M19 12H5" />
+            <path d="m12 19-7-7 7-7" />
+        </svg>
+    );
+}
+
 function SearchIcon() {
     return (
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-black-light-hover">
@@ -76,12 +94,31 @@ export default function LaporanSiswaPage() {
                     <div className="absolute -right-[280px] top-[780px] h-[335px] w-[335px] rounded-full bg-blue-normal/40 blur-[50px]" />
                 </div>
 
+
+
                 <div className="relative mx-auto w-full max-w-7xl">
-                    <section className="rounded-3xl border-t-[20px] border-[#92CCFF] bg-white px-5 py-4 shadow-[0_0_14px_rgba(0,129,242,0.08)]">
+                    <Link
+                        href={route('siswa-binaan')}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-blue-normal transition hover:text-blue-normal-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-normal/30 focus-visible:ring-offset-2"
+                    >
+                        <BackIcon />
+                        Kembali ke Siswa Binaan
+                    </Link>
+
+                    <div className="mt-4 mb-8">
+                        <h1 className="text-2xl font-bold leading-tight text-black-normal sm:text-3xl">
+                            Laporan siswa 
+                            <span className="text-blue-normal"> {student.name}</span>
+                        </h1>
+                        <p className="mt-2 text-sm text-black-muted">
+                            Data capaian perkembangan siswa berdasarkan catatan observasi harian dan sesi pendampingan
+                        </p>
+                    </div>
+                    {/* <section className="rounded-3xl border-t-[20px] border-[#92CCFF] bg-white px-5 py-4 shadow-[0_0_14px_rgba(0,129,242,0.08)]">
                         <h1 className="text-xl font-bold leading-[1.2] text-blue-normal">{student.name}</h1>
                         <p className="mt-1 text-xs leading-[1.2] text-black-normal">{student.className} • {student.condition} • {student.age}</p>
                         <p className="mt-2 text-xs leading-[1.2] text-black-muted">NISN: {student.nisn}</p>
-                    </section>
+                    </section> */}
 
                     <div className="mt-5 grid gap-5 border-b-4 border-[#EDEDED] pb-6 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:items-center">
                         <section className="min-w-0">
