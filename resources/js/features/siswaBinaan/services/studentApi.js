@@ -3,6 +3,30 @@ import axios from 'axios';
 let studentsCache = null;
 let studentsRequest = null;
 const studentCache = new Map();
+let dashboardCache = null;
+let dashboardRequest = null;
+
+export async function getDashboard() {
+    if (dashboardCache) {
+        return dashboardCache;
+    }
+
+    if (!dashboardRequest) {
+        dashboardRequest = axios
+            .get('/api/dashboard')
+            .then((response) => response.data.data)
+            .then((dashboard) => {
+                dashboardCache = dashboard;
+
+                return dashboard;
+            })
+            .finally(() => {
+                dashboardRequest = null;
+            });
+    }
+
+    return dashboardRequest;
+}
 
 export async function getStudents() {
     if (studentsCache) {
@@ -132,4 +156,5 @@ export async function generateStudentRecommendation(studentId, fieldNotes) {
 export function invalidateStudentsCache() {
     studentsCache = null;
     studentCache.clear();
+    dashboardCache = null;
 }

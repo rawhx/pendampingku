@@ -1,23 +1,59 @@
 import ActivityFeed from '@/features/dashboard/components/ActivityFeed';
-import AiRecommendationCard from '@/features/dashboard/components/AiRecommendationCard';
 import GreetingCard from '@/features/dashboard/components/GreetingCard';
-import ScheduleList from '@/features/dashboard/components/ScheduleList';
 import StatCard from '@/features/dashboard/components/StatCard';
 import StudentCard from '@/features/dashboard/components/StudentCard';
 import { 
-    activities,
     aiRecommendation,
     greeting,
     schedule,
     stats,
-    students 
 } from '@/features/dashboard/data/dashboard';
+import { getDashboard } from '@/features/siswaBinaan/services/studentApi';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 
 export default function DashboardPage() {
     const { auth } = usePage().props;
+    const [dashboard, setDashboard] = useState(null);
+
+    useEffect(() => {
+        let isCurrent = true;
+
+        getDashboard().then((data) => {
+            if (isCurrent) {
+                setDashboard(data);
+            }
+        });
+
+        return () => {
+            isCurrent = false;
+        };
+    }, []);
+
+    const dashboardStats = stats.map((stat) =>
+        stat.id === 'students'
+            ? {
+                  ...stat,
+                  value: `${dashboard?.active_students ?? 0} Siswa`,
+                  detail: 'Siswa aktif yang Anda dampingi',
+              }
+            : stat.id === 'observation-needed'
+              ? {
+                    ...stat,
+                    value: `${dashboard?.students_needing_observation ?? 0} Siswa`,
+                }
+              : stat.id === 'reports'
+                ? {
+                      ...stat,
+                      value: `${dashboard?.reports_ready ?? 0} Laporan`,
+                      detail: 'Memiliki catatan siap kirim hari ini',
+                  }
+                : stat,
+    );
+    const dashboardStudents = dashboard?.students ?? [];
+    const dashboardActivities = dashboard?.activities ?? [];
 
     return (
         <AuthenticatedLayout>
@@ -35,8 +71,8 @@ export default function DashboardPage() {
                 <div className="relative mx-auto w-full max-w-7xl px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32 xl:pt-40">
                     <GreetingCard greeting={greeting} user={auth?.user} />
 
-                    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-10 xl:grid-cols-4 xl:gap-8">
-                        {stats.map((stat) => (
+                    <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:mt-10 xl:gap-8">
+                        {dashboardStats.map((stat) => (
                             <StatCard key={stat.id} {...stat} />
                         ))}
                     </div>
@@ -55,20 +91,16 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
-                            {students.map((student) => (
+                            {dashboardStudents.map((student) => (
                                 <StudentCard key={student.id} {...student} />
                             ))}
                         </div>
 
-                        <AiRecommendationCard {...aiRecommendation} />
                     </div>
                 </section>
 
                 <div className="relative mx-auto mt-10 w-full max-w-7xl px-4 pb-16 sm:px-6 lg:mt-12 lg:px-0 lg:pb-20">
-                    <div className="grid gap-6 lg:grid-cols-[minmax(0,451px)_minmax(0,1fr)] lg:items-start lg:gap-6">
-                        <ActivityFeed items={activities} />
-                        <ScheduleList items={schedule} />
-                    </div>
+                    <ActivityFeed items={dashboardActivities} />
                 </div>
             </div>
         </AuthenticatedLayout>

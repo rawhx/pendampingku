@@ -5,7 +5,7 @@ export const greeting = {
     fallbackGreeting: 'Selamat Pagi, Bu Anjani!',
     semester: 'Semester Ganjil',
     description:
-        'Setiap langkah kecil adalah kemenangan besar bagi anak inklusi. 4 siswa siap berkembang hari ini di bawah pendampingan penuh kasih Anda.',
+        'Setiap langkah kecil adalah kemenangan besar bagi anak inklusi.',
 };
 
 export const stats = [
@@ -17,11 +17,11 @@ export const stats = [
         detail: '2 ASD, 1 ADHD, 1 Disleksia',
     },
     {
-        id: 'notes',
+        id: 'observation-needed',
         icon: 'pencil',
-        label: 'Catatan Hari Ini',
-        value: '3 / 4 Selesai',
-        detail: 'Nadira (Sesi Jam 13:00)',
+        label: 'Perlu Observasi',
+        value: '0 Siswa',
+        detail: 'Belum memiliki catatan hari ini',
     },
     {
         id: 'reports',
@@ -29,13 +29,6 @@ export const stats = [
         label: 'Laporan Siap Kirim',
         value: '2 Laporan',
         detail: 'Siap disetujui orang tua',
-    },
-    {
-        id: 'regulation',
-        icon: 'chart',
-        label: 'Indeks Regulasi Mandiri',
-        value: '84%',
-        detail: 'Rata-rata kestabilan emosi kelas umum',
     },
 ];
 
@@ -51,6 +44,7 @@ export const students = [
             { label: 'Interaksi Sosial Peer-to-Peer', value: '65%', percent: 65 },
         ],
         note: 'Catatan sesi pagi telah disimpan',
+        nisn: '123456'
     },
     {
         id: 'alika',
@@ -63,6 +57,7 @@ export const students = [
             { label: 'Transisi Antar Pelajaran', value: '50%', percent: 50 },
         ],
         note: 'Jeda istirahat sensory gym diperlukan pukul 10:45',
+        nisn: '654321'
     },
     {
         id: 'kenzo',
@@ -87,6 +82,7 @@ export const students = [
             { label: 'Koordinasi Motorik Kasar', value: '70%', percent: 70 },
         ],
         note: 'Sesi evaluasi harian terjadwal pukul 13:00',
+        nisn: '111111'
     },
 ];
 
