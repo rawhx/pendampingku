@@ -22,7 +22,7 @@ Platform web untuk membantu Guru Pendamping Khusus (GPK) mencatat observasi hari
 10. [API Reference](#10-api-reference)
 11. [Credits and Attribution](#11-credits-and-attribution)
 12. [Struktur Repository](#12-struktur-repository)
-13. [Batasan dan Catatan Keamanan](#13-batasan-dan-catatan-keamanan
+13. [Batasan dan Catatan Keamanan](#13-batasan-dan-catatan-keamanan)
 
 ---
 
