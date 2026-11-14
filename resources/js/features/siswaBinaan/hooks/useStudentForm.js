@@ -1,3 +1,4 @@
+import { notify } from '@/components/common/notification';
 import { useState } from 'react';
 import { validateTambahSiswa } from '../data/tambahSiswa';
 import { createStudent, updateStudent } from '../services/studentApi';
@@ -42,15 +43,29 @@ export default function useStudentForm(studentId) {
                 await createStudent(payload);
             }
 
+            notify({
+                title: studentId
+                    ? 'Data siswa berhasil diperbarui'
+                    : 'Data siswa berhasil ditambahkan',
+                message: `${form.fullName} telah ${studentId ? 'diperbarui' : 'ditambahkan'} ke daftar siswa binaan.`,
+                tone: 'success',
+            });
             setSaved(true);
         } catch (error) {
             const apiErrors = error.response?.data?.errors;
+            const message = error.response?.data?.message;
 
-            setErrors(
-                apiErrors
-                    ? mapStudentFormErrors(apiErrors)
-                    : { form: 'Data siswa gagal disimpan. Silakan coba lagi.' },
-            );
+            setErrors(apiErrors ? mapStudentFormErrors(apiErrors) : {});
+
+            notify({
+                title: 'Gagal menyimpan data siswa',
+                message: apiErrors
+                    ? 'Periksa kembali data yang ditandai, lalu coba lagi.'
+                    : message ||
+                      'Data siswa gagal disimpan. Silakan coba lagi.',
+                tone: 'error',
+                duration: 8000,
+            });
         } finally {
             setIsSaving(false);
         }

@@ -1,23 +1,39 @@
+import { notify } from '@/components/common/notification';
 import InputError from '@/components/ui/InputError';
 import InputLabel from '@/components/ui/InputLabel';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import TextInput from '@/components/ui/TextInput';
-import { Transition } from '@headlessui/react';
 import { useForm, usePage } from '@inertiajs/react';
 
 export default function UpdateProfileInformation({ className = '' }) {
     const user = usePage().props.auth.user;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
-        useForm({
-            name: user.name,
-            email: user.email,
-        });
+    const { data, setData, patch, errors, processing } = useForm({
+        name: user.name,
+        email: user.email,
+    });
 
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route('profile.update'), {
+            onSuccess: () => {
+                notify({
+                    title: 'Profil berhasil diperbarui',
+                    message: 'Informasi akun Anda telah disimpan.',
+                    tone: 'success',
+                });
+            },
+            onError: () => {
+                notify({
+                    title: 'Gagal memperbarui profil',
+                    message:
+                        'Periksa kembali data yang ditandai, lalu coba lagi.',
+                    tone: 'error',
+                    duration: 8000,
+                });
+            },
+        });
     };
 
     return (
@@ -67,18 +83,6 @@ export default function UpdateProfileInformation({ className = '' }) {
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
-                    </Transition>
                 </div>
             </form>
         </section>

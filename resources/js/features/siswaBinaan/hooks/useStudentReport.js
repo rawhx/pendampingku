@@ -31,8 +31,8 @@ export default function useStudentReport(student) {
         };
     }, [student]);
 
-    const { notes, metrics } = useMemo(
-        () => (student ? getStudentReport(student, observations) : { notes: [], metrics: [] }),
+    const { notes, metrics, plan } = useMemo(
+        () => (student ? getStudentReport(student, observations) : { notes: [], metrics: [], plan: [] }),
         [observations, student],
     );
 
@@ -82,6 +82,7 @@ export default function useStudentReport(student) {
     return {
         notes,
         metrics,
+        plan,
         latestNote: notes[0],
         filteredNotes,
         query,

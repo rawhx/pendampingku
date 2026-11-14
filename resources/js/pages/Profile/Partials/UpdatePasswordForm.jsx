@@ -1,8 +1,8 @@
+import { notify } from '@/components/common/notification';
 import InputError from '@/components/ui/InputError';
 import InputLabel from '@/components/ui/InputLabel';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import TextInput from '@/components/ui/TextInput';
-import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
 import { useRef } from 'react';
 
@@ -10,15 +10,7 @@ export default function UpdatePasswordForm({ className = '' }) {
     const passwordInput = useRef();
     const currentPasswordInput = useRef();
 
-    const {
-        data,
-        setData,
-        errors,
-        put,
-        reset,
-        processing,
-        recentlySuccessful,
-    } = useForm({
+    const { data, setData, errors, put, reset, processing } = useForm({
         current_password: '',
         password: '',
         password_confirmation: '',
@@ -29,8 +21,23 @@ export default function UpdatePasswordForm({ className = '' }) {
 
         put(route('password.update'), {
             preserveScroll: true,
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                reset();
+                notify({
+                    title: 'Kata sandi berhasil diperbarui',
+                    message: 'Kata sandi akun Anda telah diubah.',
+                    tone: 'success',
+                });
+            },
             onError: (errors) => {
+                notify({
+                    title: 'Gagal memperbarui kata sandi',
+                    message:
+                        'Periksa kembali kata sandi yang ditandai, lalu coba lagi.',
+                    tone: 'error',
+                    duration: 8000,
+                });
+
                 if (errors.password) {
                     reset('password', 'password_confirmation');
                     passwordInput.current.focus();
@@ -123,18 +130,6 @@ export default function UpdatePasswordForm({ className = '' }) {
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
-                    </Transition>
                 </div>
             </form>
         </section>

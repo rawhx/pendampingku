@@ -1,5 +1,4 @@
 import CatatanHarianHeader from '@/features/catatanHarian/components/CatatanHarianHeader';
-import CatatanSuccessToast from '@/features/catatanHarian/components/CatatanSuccessToast';
 import DocumentationSection from '@/features/catatanHarian/components/DocumentationSection';
 import EmotionCheckInSection from '@/features/catatanHarian/components/EmotionCheckInSection';
 import FormActions from '@/features/catatanHarian/components/FormActions';
@@ -9,7 +8,10 @@ import RubricSection from '@/features/catatanHarian/components/RubricSection';
 import SessionDetailsSection from '@/features/catatanHarian/components/SessionDetailsSection';
 import StrategySection from '@/features/catatanHarian/components/StrategySection';
 import VisibilitySection from '@/features/catatanHarian/components/VisibilitySection';
-import { emotionOptions } from '@/features/catatanHarian/data/catatanHarian';
+import {
+    emotionOptions,
+    qualitativeFields,
+} from '@/features/catatanHarian/data/catatanHarian';
 import useCatatanHarianForm from '@/features/catatanHarian/hooks/useCatatanHarianForm';
 import useStudent from '@/features/siswaBinaan/hooks/useStudent';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout';
@@ -21,6 +23,7 @@ export default function CatatanHarianPage() {
     const catatan = useCatatanHarianForm(
         student ?? { id: studentId, name: 'Siswa', className: '' },
     );
+    const [activityField, , , ...followUpFields] = qualitativeFields;
 
     if (isLoading) {
         return (
@@ -60,14 +63,15 @@ export default function CatatanHarianPage() {
                 <CatatanHarianHeader studentName={student.name} />
 
                 <div className="flex flex-col gap-6">
-                    {catatan.saved && (
-                        <CatatanSuccessToast studentName={student.name} />
-                    )}
-
-                    {Object.keys(catatan.errors).length > 0 && (
-                        <div role="alert" className="rounded-2xl border border-red-normal/30 bg-red-light px-5 py-4 text-sm text-red-dark">
-                            {catatan.errors.form ||
-                                'Lengkapi semua input wajib sebelum melanjutkan atau menyimpan catatan.'}
+                    {Object.keys(catatan.errors).some(
+                        (field) => field !== 'form',
+                    ) && (
+                        <div
+                            role="alert"
+                            className="rounded-2xl border border-red-normal/30 bg-red-light px-5 py-4 text-sm text-red-dark"
+                        >
+                            Lengkapi semua input wajib sebelum melanjutkan atau
+                            menyimpan catatan.
                         </div>
                     )}
 
@@ -92,15 +96,16 @@ export default function CatatanHarianPage() {
                                 hasError={Boolean(catatan.errors.rubric)}
                                 onSelect={catatan.updateRubric}
                             />
-                            <QualitativeSection
-                                values={catatan.form.qualitative}
-                                errors={catatan.errors}
-                                onChange={catatan.updateQualitative}
-                            />
                             <FormActions step={1} onNext={catatan.goNext} />
                         </>
                     ) : (
                         <>
+                            <QualitativeSection
+                                values={catatan.form.qualitative}
+                                errors={catatan.errors}
+                                fields={[activityField]}
+                                onChange={catatan.updateQualitative}
+                            />
                             <ObservationNotesSection
                                 notes={catatan.form.notes}
                                 error={catatan.errors.notes}
@@ -115,6 +120,13 @@ export default function CatatanHarianPage() {
                                 value={catatan.form.strategy}
                                 error={catatan.errors.strategy}
                                 onChange={(strategy) => catatan.updateField('strategy', strategy)}
+                            />
+                            <QualitativeSection
+                                values={catatan.form.qualitative}
+                                errors={catatan.errors}
+                                fields={followUpFields}
+                                startIndex={4}
+                                onChange={catatan.updateQualitative}
                             />
                             <DocumentationSection
                                 files={catatan.form.files}

@@ -59,10 +59,13 @@ export function getStudentReport(student, observations = []) {
             answeredCount: rubricScores.length,
             observationCount: notes.length,
             insight:
-                student.analisis_capaian?.[category.id]?.insight ??
-                insights[category.id],
+                student.analisis_capaian?.[category.id]?.insight ?? ""
         };
     });
 
-    return { notes, metrics };
+    const plan = Array.isArray(student.analisis_capaian?.rencana_pendampingan)
+        ? student.analisis_capaian.rencana_pendampingan
+        : [];
+
+    return { notes, metrics, plan };
 }

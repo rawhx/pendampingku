@@ -53,24 +53,6 @@ export default function TambahSiswaForm({
 
     return (
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10">
-            {errors.form && (
-                <div
-                    role="alert"
-                    className="rounded-2xl border border-red-300 bg-red-50 px-5 py-3 text-sm font-medium text-red-700"
-                >
-                    {errors.form}
-                </div>
-            )}
-            {saved && (
-                <div
-                    role="status"
-                    className="rounded-2xl border border-green-normal/30 bg-green-light px-5 py-3 text-sm font-medium text-green-dark"
-                >
-                    Data siswa berhasil {studentId ? 'diperbarui' : 'disimpan'}. Mengalihkan ke daftar
-                    siswa...
-                </div>
-            )}
-
             <div className="flex flex-col gap-12 rounded-3xl bg-white px-5 py-7 sm:px-7 sm:py-9">
                 <FormSection
                     index={1}

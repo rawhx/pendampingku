@@ -1,6 +1,7 @@
 import { icons } from '@/assets/icons/icons';
 import ObservationHistoryCard from '@/features/siswaBinaan/components/ObservationHistoryCard';
 import ReportProgressCard from '@/features/siswaBinaan/components/ReportProgressCard';
+import StudentPlanSection from '@/features/siswaBinaan/components/StudentPlanSection';
 import StudentRadarChart from '@/features/siswaBinaan/components/StudentRadarChart';
 import useStudent from '@/features/siswaBinaan/hooks/useStudent';
 import useStudentReport from '@/features/siswaBinaan/hooks/useStudentReport';
@@ -48,6 +49,7 @@ export default function LaporanSiswaPage() {
     const {
         notes,
         metrics,
+        plan,
         filteredNotes,
         query,
         sortOrder,
@@ -186,6 +188,8 @@ export default function LaporanSiswaPage() {
                             ))}
                         </div>
                     </section>
+
+                    <StudentPlanSection plan={plan} observationCount={notes.length} />
 
                     <section className="mt-8 px-0 sm:px-5 sm:py-6">
                         <div className="mb-8 flex flex-col gap-2">

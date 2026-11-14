@@ -35,7 +35,7 @@ export default function ReportProgressCard({ metric, observationCount, insight }
                     className="h-6 w-6 shrink-0"
                 />
                 <p>
-                    <span className="font-bold">Insight GPK</span>: {insight}
+                    <span className="font-bold">Insight GPK</span>: {insight ? insight : 'Belum ada insight'}
                 </p>
             </div>
         </article>
