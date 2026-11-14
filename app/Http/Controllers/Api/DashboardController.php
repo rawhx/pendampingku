@@ -17,8 +17,7 @@ class DashboardController extends Controller
             ->where('status', 'Aktif');
         $todayObservations = StudentObservation::query()
             ->whereIn('student_id', (clone $activeStudents)->select('id'))
-            ->whereDate('observed_on', $today)
-            ->select('student_id');
+            ->where('observed_on', $today);
         $dashboardStudents = (clone $activeStudents)
             ->orderBy('full_name')
             ->get([
@@ -41,10 +40,7 @@ class DashboardController extends Controller
             'data' => [
                 'date' => $today,
                 'active_students' => (clone $activeStudents)->count(),
-                'reports_ready' => (clone $todayObservations)
-                    ->where('parent_report', true)
-                    ->distinct('student_id')
-                    ->count('student_id'),
+                'reports_ready' => (clone $todayObservations)->count(),
                 'students_needing_observation' => (clone $activeStudents)
                     ->whereDoesntHave('observations', fn ($query) => $query
                         ->whereDate('observed_on', $today))

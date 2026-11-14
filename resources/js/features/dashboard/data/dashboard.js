@@ -28,7 +28,7 @@ export const stats = [
         icon: 'report',
         label: 'Laporan Siap Kirim',
         value: '2 Laporan',
-        detail: 'Siap disetujui orang tua',
+        detail: 'Catatan observasi hari ini',
     },
 ];
 

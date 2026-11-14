@@ -10,7 +10,6 @@ import {
 } from '../utils/catatanHarianValidation';
 import {
     createStudentObservation,
-    downloadStudentObservationPdf,
     generateStudentRecommendation,
     invalidateStudentsCache,
 } from '@/features/siswaBinaan/services/studentApi';
@@ -151,10 +150,9 @@ export default function useCatatanHarianForm(student) {
         };
 
         setIsSaving(true);
-        let pdfDownloadFailed = false;
 
         try {
-            const observation = await createStudentObservation(student.id, {
+            await createStudentObservation(student.id, {
                 observed_on: form.date,
                 start_time: form.startTime,
                 end_time: form.endTime,
@@ -170,48 +168,32 @@ export default function useCatatanHarianForm(student) {
                 ai_recommendation: recommendation,
             });
             invalidateStudentsCache();
-            await downloadStudentObservationPdf(student.id, observation.id);
         } catch (error) {
             const apiErrors = error.response?.data?.errors;
             const message = apiErrors
                 ? Object.values(apiErrors).flat()[0]
                 : error.response?.data?.message;
-            const isPdfDownloadError = error.config?.url?.endsWith('/pdf');
+            const errorMessage =
+                message || 'Catatan gagal disimpan. Silakan coba lagi.';
 
-            if (isPdfDownloadError) {
-                pdfDownloadFailed = true;
-                notify({
-                    title: 'Catatan tersimpan, PDF gagal diunduh',
-                    message:
-                        'Catatan berhasil disimpan, tetapi PDF gagal diunduh. Silakan unduh dari histori catatan.',
-                    tone: 'error',
-                    duration: 8000,
-                });
-            } else {
-                const errorMessage =
-                    message || 'Catatan gagal disimpan. Silakan coba lagi.';
+            setErrors({ form: errorMessage });
+            notify({
+                title: 'Gagal menyimpan catatan harian',
+                message: errorMessage,
+                tone: 'error',
+                duration: 8000,
+            });
 
-                setErrors({ form: errorMessage });
-                notify({
-                    title: 'Gagal menyimpan catatan harian',
-                    message: errorMessage,
-                    tone: 'error',
-                    duration: 8000,
-                });
-
-                return;
-            }
+            return;
         } finally {
             setIsSaving(false);
         }
 
-        if (!pdfDownloadFailed) {
-            notify({
-                title: 'Catatan harian berhasil disimpan',
-                message: `Catatan harian ${student.name} berhasil disimpan. Mengalihkan ke Siswa Binaan...`,
-                tone: 'success',
-            });
-        }
+        notify({
+            title: 'Catatan harian berhasil disimpan',
+            message: `Catatan harian ${student.name} berhasil disimpan. Mengalihkan ke Siswa Binaan...`,
+            tone: 'success',
+        });
 
         setSaved(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
