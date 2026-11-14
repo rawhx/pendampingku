@@ -68,8 +68,8 @@
                         <td class="px" style="padding:32px 40px 0 40px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                    <td width="36" height="36" align="center" valign="middle" style="width:36px;height:36px;background-color:#0081F2;border-radius:10px;color:#ffffff;font-family:-apple-system,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;line-height:36px;">
-                                        P
+                                    <td width="36" height="36" align="center" valign="middle" style="width:36px;height:36px;background-color:#0081F2;border-radius:10px;">
+                                        <img src="{{ asset('images/brand-mark.png') }}" width="36" height="36" alt="{{ $appName }}" style="display:block;width:36px;height:36px;border:0;border-radius:10px;">
                                     </td>
                                     <td style="padding-left:10px;font-family:-apple-system,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:17px;font-weight:700;color:#191919;letter-spacing:-0.31px;">
                                         {{ $appName }}

@@ -1,3 +1,4 @@
+import BrandMark from '@/components/ui/BrandMark';
 import landingNavigation from '@/data/navigation/landing.json';
 import { address, appName, email, phone } from '@/constants/app';
 
@@ -36,10 +37,7 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                 <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
                     <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.2fr] lg:gap-16">
                         <div className="sm:col-span-2 lg:col-span-1">
-                            <div
-                                aria-hidden="true"
-                                className="mb-4 h-10 w-10 rounded-md bg-white"
-                            />
+                            <BrandMark className="mb-4 h-10 w-10 rounded-xl bg-white !text-blue-normal" iconClassName="h-6 w-6" />
                             <span className="sr-only">{appName}</span>
                             <p className="max-w-md text-justify text-sm leading-relaxed text-white">
                                 Mendampingi tumbuh kembang dan pendidikan anak

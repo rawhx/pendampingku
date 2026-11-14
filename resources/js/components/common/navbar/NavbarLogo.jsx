@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import ApplicationLogo from '@/components/ui/ApplicationLogo';
+import BrandMark from '@/components/ui/BrandMark';
 import { appName } from '@/constants/app';
 
 export default function NavbarLogo({ onBlue = false }) {
@@ -9,7 +9,9 @@ export default function NavbarLogo({ onBlue = false }) {
     return (
         <div className="flex items-center">
             <Link href={homeHref} className="flex items-center gap-3 font-bold">
-                    <ApplicationLogo className={`h-8 w-auto shrink-0 fill-current ${onBlue ? 'text-white' : 'text-normal'}`} />
+                    <BrandMark
+                        className={`h-9 w-9 rounded-xl ${onBlue ? 'ring-2 ring-white/60' : ''}`}
+                    />
                     <span className={`whitespace-nowrap text-sm sm:text-base ${onBlue ? 'text-white' : 'text-normal'}`}>
                         {appName}
                     </span>

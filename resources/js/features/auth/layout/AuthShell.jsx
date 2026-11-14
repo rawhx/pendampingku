@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import BrandMark from '@/components/ui/BrandMark';
 import { appName } from '@/constants/app';
 
 export default function AuthShell({
@@ -15,19 +16,7 @@ export default function AuthShell({
 
             <div className="w-full max-w-[400px]">
                 <div className="mb-8 flex items-center justify-center gap-2 lg:hidden">
-                    <div className="btn-gradient-primary flex h-10 w-10 items-center justify-center rounded-xl text-white shadow">
-                        <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.2"
-                        >
-                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                            <polyline points="2 17 12 22 22 17" />
-                            <polyline points="2 12 12 17 22 12" />
-                        </svg>
-                    </div>
+                    <BrandMark className="h-10 w-10 rounded-xl" iconClassName="h-6 w-6" />
                     <span className="text-xl font-bold tracking-tight text-black-dark-active">
                         {appName}
                     </span>
