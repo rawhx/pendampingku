@@ -394,10 +394,10 @@
         $domainNames = [
             'ER'  => 'Regulasi Emosi',
             'BR'  => 'Regulasi Perilaku',
-            'KM'  => 'Kemandirian',
-            'KOM' => 'Komunikasi',
-            'IS'  => 'Interaksi Sosial',
-            'AKD' => 'Perkembangan Akademik',
+            'IN'  => 'Kemandirian',
+            'CO'  => 'Komunikasi',
+            'SI'  => 'Interaksi Sosial',
+            'AC'  => 'Perkembangan Akademik',
         ];
 
         $domainMap = collect($domainNames)
@@ -474,7 +474,7 @@
     <table class="matrix-title">
         <tr>
             <td class="t">I. MATRIKS PERKEMBANGAN &amp; CAPAIAN RUBRIK HARIAN</td>
-            <td class="freq">Frekuensi Observasi: 5 Hari Sekolah (Senin - Jumat)</td>
+            {{-- <td class="freq">Frekuensi Observasi: 5 Hari Sekolah (Senin - Jumat)</td> --}}
         </tr>
     </table>
 
@@ -537,69 +537,6 @@
             </tr>
         </tbody>
     </table>
-
-    {{-- Detail Skor per Kode Rubrik --}}
-    <h2>II. Detail Skor per Kode Rubrik</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th class="center">Kode</th>
-                <th class="center">Skor</th>
-                <th style="width: 38%;">Insight</th>
-                <th style="width: 38%;">Rekomendasi</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @forelse ($groupedRubrics as $aspect => $rubrics)
-                <tr class="group-row">
-                    <td colspan="4">
-                        Matriks {{ $domainName($aspect) }}
-                    </td>
-                </tr>
-
-                @foreach ($rubrics as $rubric)
-                    <tr>
-                        <td class="code center">
-                            {{ $rubric->rubric_code }}
-                        </td>
-
-                        <td class="center">
-                            <div class="score {{ $scoreClass($rubric->score) }}">
-                                {{ $scoreLabel($rubric->score) }}
-                            </div>
-                        </td>
-
-                        <td>
-                            {{ $rubric->ai_insight ?: '-' }}
-                        </td>
-
-                        <td>
-                            {{ $rubric->ai_recommendation ?: '-' }}
-                        </td>
-                    </tr>
-                @endforeach
-
-            @empty
-                <tr>
-                    <td colspan="4" class="center muted">
-                        Belum ada data rubrik.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    {{-- Legend --}}
-    <div class="legend small muted">
-        <span><span class="badge s4">4</span> Mandiri</span>
-        <span><span class="badge s3">3</span> Bantuan minimal</span>
-        <span><span class="badge s2">2</span> Bantuan sedang</span>
-        <span><span class="badge s1">1</span> Bantuan maksimal</span>
-        <span><span class="badge s0">0</span> Belum tercapai</span>
-        <span><span class="badge sn">N/O</span> Tidak diamati</span>
-    </div>
 
     {{-- Insight AI --}}
     <h2>Insight AI Catatan</h2>
