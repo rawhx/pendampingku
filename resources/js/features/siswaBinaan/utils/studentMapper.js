@@ -81,7 +81,7 @@ export function getStudentSummaryStats(students) {
         {
             id: 'active',
             icon: 'academic',
-            value: students.filter((student) => student.status.label === 'Aktif')
+            value: students.filter((student) => student.serviceStatus === 'Aktif')
                 .length,
             label: 'Total Siswa Aktif',
         },
@@ -102,8 +102,9 @@ export function getStudentSummaryStats(students) {
         {
             id: 'speech',
             icon: 'speech',
-            value: students.filter((student) => student.condition.includes('Speech'))
-                .length,
+            value: students.filter((student) =>
+                /disleksia|speech/i.test(student.condition),
+            ).length,
             label: 'Disleksia & Wicara',
         },
     ];

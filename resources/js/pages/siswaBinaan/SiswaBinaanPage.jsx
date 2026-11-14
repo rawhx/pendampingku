@@ -10,6 +10,13 @@ export default function SiswaBinaanPage() {
     const {
         query,
         setQuery,
+        grade,
+        setGrade,
+        condition,
+        setCondition,
+        gradeOptions,
+        conditionOptions,
+        hasActiveFilter,
         filteredStudents,
         summaryStats,
         isLoading,
@@ -57,6 +64,12 @@ export default function SiswaBinaanPage() {
                         <StudentToolbar
                             query={query}
                             onQueryChange={setQuery}
+                            grade={grade}
+                            onGradeChange={setGrade}
+                            gradeOptions={gradeOptions}
+                            condition={condition}
+                            onConditionChange={setCondition}
+                            conditionOptions={conditionOptions}
                         />
 
                         <div className="mt-6 flex flex-col gap-5">
@@ -77,7 +90,11 @@ export default function SiswaBinaanPage() {
                                 ))
                             ) : (
                                 <div className="rounded-3xl bg-white/70 px-6 py-16 text-center text-sm text-black-muted">
-                                    Siswa yang dicari belum ditemukan.
+                                    {hasActiveFilter
+                                        ? 'Belum ada data siswa untuk filter yang dipilih.'
+                                        : query
+                                          ? 'Siswa yang dicari belum ditemukan.'
+                                          : 'Belum ada data siswa.'}
                                 </div>
                             )}
                         </div>

@@ -1,7 +1,16 @@
 import { Link } from '@inertiajs/react';
 import StudentIcon from './StudentIcon';
 
-export default function StudentToolbar({ query, onQueryChange }) {
+export default function StudentToolbar({
+    query,
+    onQueryChange,
+    grade,
+    onGradeChange,
+    gradeOptions,
+    condition,
+    onConditionChange,
+    conditionOptions,
+}) {
     return (
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row">
@@ -11,9 +20,9 @@ export default function StudentToolbar({ query, onQueryChange }) {
                     <input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Cari nama siswa, NISN, Kelas" className="h-12 w-full rounded-3xl border border-white-normal bg-white/70 pl-10 pr-4 text-sm text-black-normal outline-none transition focus:border-blue-normal focus:ring-2 focus:ring-blue-normal/20" />
                 </label>
                 <div className="grid grid-cols-2 gap-3 sm:flex">
-                    <select className="h-12 min-w-0 lg:min-w-[140px] rounded-3xl border border-white-normal bg-white/70 px-3 text-sm text-black-normal outline-none focus:border-blue-normal focus:ring-2 focus:ring-blue-normal/20"><option>Semua Kelas</option><option>Kelas 1</option><option>Kelas 2A</option><option>Kelas 3B</option><option>Kelas 4C</option>
+                    <select value={grade} onChange={(event) => onGradeChange(event.target.value)} className="h-12 min-w-0 lg:min-w-[140px] rounded-3xl border border-white-normal bg-white/70 px-3 text-sm text-black-normal outline-none focus:border-blue-normal focus:ring-2 focus:ring-blue-normal/20"><option value="">Semua Kelas</option>{gradeOptions.map((option) => <option key={option.value} value={option.value}>{option.label}{option.hasData ? '' : ''}</option>)}
                     </select>
-                    <select className="h-12 min-w-0 lg:min-w-[140px] rounded-3xl border border-white-normal bg-white/70 px-3 text-sm text-black-normal outline-none focus:border-blue-normal focus:ring-2 focus:ring-blue-normal/20"><option>Kategori</option><option>ASD</option><option>ADHD</option><option>Disleksia</option>
+                    <select value={condition} onChange={(event) => onConditionChange(event.target.value)} className="h-12 min-w-0 lg:min-w-[240px] rounded-3xl border border-white-normal bg-white/70 px-3 text-sm text-black-normal outline-none focus:border-blue-normal focus:ring-2 focus:ring-blue-normal/20"><option value="">Kategori</option>{conditionOptions.map((option) => <option key={option.value} value={option.value}>{option.label}{option.hasData ? '' : ''}</option>)}
                     </select>
                 </div>
             </div>
