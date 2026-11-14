@@ -58,6 +58,18 @@ Setiap catatan observasi disusun dari indikator rubrik yang tersebar dalam enam 
 - Perkembangan siswa sulit dipantau secara konsisten ketika data tidak terpusat.
 - Dokumentasi sesi pendampingan dan hasil intervensi tidak selalu tersimpan rapi.
 
+### Validasi Masalah melalui Interview
+
+Wawancara dan analisis kebutuhan (*requirement gathering*) yang dilakukan bertujuan untuk memahami permasalahan nyata secara langsung dari pengguna di lapangan, khususnya dalam konteks pendampingan belajar inklusif.
+
+| Keterangan | Detail |
+| --- | --- |
+| **Nama** | Safira Calfina Izzumi |
+| **Pekerjaan** | Shadow Teacher |
+| **Instansi** | SDI Nurul Izzah, Malang |
+| **Usia** | 26 Tahun |
+| **Tanggal Wawancara** | 8 November 2026 |
+
 ### Solusi yang Ditawarkan
 
 PendampingKu menggabungkan pencatatan observasi, rubrik terstruktur, analisis AI, riwayat, dan ekspor PDF dalam satu aplikasi web. Shadow Teacher dapat mengisi observasi melalui formulir dua langkah, mengunggah dokumentasi foto, lalu melihat ringkasan capaian pada halaman laporan siswa.
