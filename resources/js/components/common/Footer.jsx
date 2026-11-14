@@ -1,10 +1,12 @@
 import BrandMark from '@/components/ui/BrandMark';
+import dashboardNavigation from '@/data/navigation/dashboard.json';
 import landingNavigation from '@/data/navigation/landing.json';
 import { address, appName, email, phone } from '@/constants/app';
+import { Link, usePage } from '@inertiajs/react';
 
 const FOOTER_ANCHORS = ['#beranda', '#fitur', '#alur-kerja', '#testimoni'];
 
-const navLinks = [
+const landingNavLinks = [
     ...landingNavigation.filter(({ href }) => FOOTER_ANCHORS.includes(href)),
 ];
 
@@ -26,6 +28,10 @@ function Icon({ children }) {
 }
 
 export default function Footer({ isLanding = false, absoluteLinks = false }) {
+    const { auth } = usePage().props;
+    const isAuthenticated = Boolean(auth?.user);
+    const navigationLinks = isAuthenticated ? dashboardNavigation : landingNavLinks;
+
     if (isLanding) {
         const resolveHref = (href) =>
             absoluteLinks && href.startsWith('#')
@@ -52,14 +58,23 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
                                 Navigasi
                             </h4>
                             <ul className="space-y-3 text-sm">
-                                {navLinks.map((link) => (
+                                {navigationLinks.map((link) => (
                                     <li key={link.label}>
-                                        <a
-                                            href={resolveHref(link.href)}
-                                            className="text-white/90 transition hover:text-white hover:underline"
-                                        >
-                                            {link.label}
-                                        </a>
+                                        {isAuthenticated ? (
+                                            <Link
+                                                href={route(link.routeName)}
+                                                className="text-white/90 transition hover:text-white hover:underline"
+                                            >
+                                                {link.label}
+                                            </Link>
+                                        ) : (
+                                            <a
+                                                href={resolveHref(link.href)}
+                                                className="text-white/90 transition hover:text-white hover:underline"
+                                            >
+                                                {link.label}
+                                            </a>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -133,4 +148,4 @@ export default function Footer({ isLanding = false, absoluteLinks = false }) {
             </div>
         </footer>
     );
-} 
+}
