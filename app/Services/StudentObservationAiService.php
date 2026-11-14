@@ -59,9 +59,8 @@ Makna skor wajib digunakan: 4 = Mandiri tanpa prompt; 3 = Bantuan Minimal berupa
 0 = Belum Tercapai, menolak atau menunjukkan resistensi.
 Skor lebih tinggi berarti kemandirian lebih tinggi dan kebutuhan bantuan lebih rendah.
 Jangan membuat diagnosis atau mengarang fakta. Gunakan hanya data yang tersedia.
-Untuk setiap rubric, buat insight singkat berbasis skor dan data observasi serta satu rekomendasi praktis.
-Kelompokkan hasil menjadi insight singkat untuk setiap matriks berdasarkan nama matriks,
-serta satu insight keseluruhan catatan. Nilai N/O atau "no" berarti tidak diamati dan
+Untuk setiap rubric, buat insight berbasis skor dan data observasi.
+Tuliskan hasil menjadi insight secara keseluruhan berdasarkan catatan. Nilai N/O atau "no" berarti tidak diamati dan
 tidak boleh dianggap sebagai skor 0.
 Kembalikan JSON valid saja dengan format:
 {"rubrics":{"ER01":{"insight":"...","recommendation":"..."},"BR01":{"insight":"...","recommendation":"..."}},
@@ -118,32 +117,7 @@ PROMPT;
      */
     public function generateStudentAnalysis(string $studentName, array $observations): array
     {
-        $prefixToMatrix = [
-            'ER' => 'A',
-            'BR' => 'B',
-            'IN' => 'C',
-            'CO' => 'D',
-            'SI' => 'E',
-            'AC' => 'F',
-        ];
-        $scores = collect(array_keys(self::MATRIX_NAMES))->mapWithKeys(fn (string $matrix) => [
-            $matrix => ['total_score' => 0, 'max_score' => 0, 'scores_count' => 0],
-        ])->all();
-
-        foreach ($observations as $observation) {
-            foreach ($observation['rubrics'] ?? [] as $rubric) {
-                $matrix = $prefixToMatrix[substr((string) ($rubric['rubric_code'] ?? ''), 0, 2)] ?? null;
-                $score = filter_var($rubric['score'] ?? null, FILTER_VALIDATE_INT);
-
-                if ($matrix === null || $score === false || $score < 0 || $score > 4) {
-                    continue;
-                }
-
-                $scores[$matrix]['total_score'] += $score;
-                $scores[$matrix]['max_score'] += 4;
-                $scores[$matrix]['scores_count']++;
-            }
-        }
+        $scores = $this->summarizeScores($observations);
 
         $prompt = <<<PROMPT
 Anda adalah analis pendidikan inklusif.
@@ -192,6 +166,90 @@ PROMPT;
             'insight_student_ai' => $overallInsight,
             'analisis_capaian' => $analysis,
         ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $observations
+     * @return array<int, array{heading: string, body: string}>
+     */
+    public function generateStudentPlan(string $studentName, array $observations): array
+    {
+        $scores = $this->summarizeScores($observations);
+
+        $prompt = <<<PROMPT
+Anda adalah asisten pedagogis untuk pendamping siswa berkebutuhan khusus atau yang biasa disebut shadow teacher.
+Analisis catatan lapangan berikut secara objektif dan berikan rekomendasi praktis.
+Jangan membuat diagnosis, jangan mengarang fakta, dan gunakan bahasa Indonesia yang profesional.
+Kembalikan JSON valid saja dengan format:
+{"rencana_pendampingan":[{"heading":"...","body":"..."}]}
+Buat 3 sampai 5 rencana pendampingan ke depan yang praktis dan spesifik.
+Setiap item berisi heading singkat berupa fokus area dan body berisi saran tindakan serta sasaran berikutnya.
+Nama matriks: {$this->encode(self::MATRIX_NAMES)}
+Ringkasan skor terhitung: {$this->encode($scores)}
+Seluruh data observasi dan rubric: {$this->encode($observations)}
+Nama siswa: {$studentName}
+PROMPT;
+
+        $decoded = json_decode($this->requestStructured($prompt), true);
+
+        return $this->normalizePlanning($decoded['rencana_pendampingan'] ?? null);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $observations
+     * @return array<string, array{total_score: int, max_score: int, scores_count: int}>
+     */
+    private function summarizeScores(array $observations): array
+    {
+        $prefixToMatrix = [
+            'ER' => 'A',
+            'BR' => 'B',
+            'IN' => 'C',
+            'CO' => 'D',
+            'SI' => 'E',
+            'AC' => 'F',
+        ];
+        $scores = collect(array_keys(self::MATRIX_NAMES))->mapWithKeys(fn (string $matrix) => [
+            $matrix => ['total_score' => 0, 'max_score' => 0, 'scores_count' => 0],
+        ])->all();
+
+        foreach ($observations as $observation) {
+            foreach ($observation['rubrics'] ?? [] as $rubric) {
+                $matrix = $prefixToMatrix[substr((string) ($rubric['rubric_code'] ?? ''), 0, 2)] ?? null;
+                $score = filter_var($rubric['score'] ?? null, FILTER_VALIDATE_INT);
+
+                if ($matrix === null || $score === false || $score < 0 || $score > 4) {
+                    continue;
+                }
+
+                $scores[$matrix]['total_score'] += $score;
+                $scores[$matrix]['max_score'] += 4;
+                $scores[$matrix]['scores_count']++;
+            }
+        }
+
+        return $scores;
+    }
+
+    /**
+     * @return array<int, array{heading: string, body: string}>
+     */
+    private function normalizePlanning(mixed $planning): array
+    {
+        if (! is_array($planning)) {
+            return [];
+        }
+
+        return collect($planning)
+            ->filter(fn (mixed $item): bool => is_array($item))
+            ->map(fn (array $item): array => [
+                'heading' => is_string($item['heading'] ?? null) ? trim($item['heading']) : '',
+                'body' => is_string($item['body'] ?? null) ? trim($item['body']) : '',
+            ])
+            ->filter(fn (array $item): bool => $item['heading'] !== '' && $item['body'] !== '')
+            ->take(5)
+            ->values()
+            ->all();
     }
 
     /**

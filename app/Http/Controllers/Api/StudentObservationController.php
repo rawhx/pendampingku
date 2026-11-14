@@ -99,6 +99,13 @@ class StudentObservationController extends Controller
             ]);
         }
 
+        try {
+            $studentPlan = $aiService->generateStudentPlan($ownedStudent->full_name, $existingObservations);
+        } catch (Throwable $exception) {
+            report($exception);
+            $studentPlan = [];
+        }
+
         $rubric = $validated['rubric'];
         $rubricInsights = $aiAnalysis['rubrics'];
         $uploadedFiles = $validated['files'];
@@ -106,7 +113,7 @@ class StudentObservationController extends Controller
         unset($validated['files']);
 
         try {
-            $observation = DB::transaction(function () use ($ownedStudent, $validated, $rubric, $rubricInsights, $uploadedFiles, $storage, $aiAnalysis, $studentAnalysis): StudentObservation {
+            $observation = DB::transaction(function () use ($ownedStudent, $validated, $rubric, $rubricInsights, $uploadedFiles, $storage, $aiAnalysis, $studentAnalysis, $studentPlan): StudentObservation {
                 $observation = $ownedStudent->observations()->create($validated);
                 $files = collect($uploadedFiles)->map(
                     fn ($file) => $storage->upload(
@@ -132,7 +139,10 @@ class StudentObservationController extends Controller
                 );
                 $ownedStudent->update([
                     'insight_student_ai' => $studentAnalysis['insight_student_ai'],
-                    'analisis_capaian' => $studentAnalysis['analisis_capaian'],
+                    'analisis_capaian' => [
+                        ...$studentAnalysis['analisis_capaian'],
+                        'rencana_pendampingan' => $studentPlan,
+                    ],
                 ]);
 
                 return $observation->load('rubrics');
